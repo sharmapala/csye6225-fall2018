@@ -1,0 +1,40 @@
+<div class="container-fluid">
+    <div  ng-show="model.error" class="alert alert-danger">
+        {{model.error}}
+    </div>
+    <h2>Register</h2>
+    <form name="register">
+    <label for="username">Email</label>
+    <input name = "username"
+           ng-model="user.username"
+           placeholder="username"
+           type="email"
+           class = "form-control"
+           id = "username"/>
+    <div class="alert alert-danger" ng-show="register.username.$invalid">The email is invalid.</div>
+    <label for="password">Password</label>
+    <input name = "password"
+           ng-model="user.password"
+           placeholder="password"
+           type = "password"
+           class = "form-control"
+           id = "password"/>
+
+    <label for="password1">Verify Password</label>
+    <input name = "password1"
+           ng-model="user.password1"
+           placeholder="verify password"
+           type = "password"
+           class = "form-control"
+           id = "password1"/>
+
+    <a class="btn btn-default btn-block btn-primary"
+        ng-class="{disabled: register.username.$invalid}"
+        ng-click="model.registerUser(user)"
+        role="button">Register</a>
+
+    <a class="btn btn-default btn-block btn-danger"
+       href="#!/login"
+       role="button">Cancel</a>
+    </form>
+</div>
