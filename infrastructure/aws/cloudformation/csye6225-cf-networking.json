@@ -22,7 +22,6 @@
         "AvailabilityZone2":{
             "Type":"String",
             "Default":"b",
-            
             "AllowedValues": ["a","b","c"]
 
         },
@@ -30,7 +29,6 @@
         "AvailabilityZone3":{
             "Type":"String",
             "Default":"c",
-           
             "AllowedValues":["a","b","c"]
 
         },
@@ -63,7 +61,6 @@
 
         "PublicSubnetCidrBlock1":{
             "Type":"String",
-            
             "Default":"10.0.4.0/24",
             "MinLength":"10",
             "MaxLength":"18",
@@ -116,7 +113,7 @@
                             "Fn::Join": [
                                 "", [
                                 {"Ref": "StackName"},
-                                "csye6225-vpc"
+                                "-csye6225-vpc"
                                 ]
                             ]
                             
