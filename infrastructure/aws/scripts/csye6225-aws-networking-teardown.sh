@@ -18,6 +18,7 @@ if [ $# -eq 0 ]; then
 	exit 1
 fi
 
+
 # Retrieving VPC Name
 echo -e "\n"
 echo "***RETRIEVE VPC NAME***"
