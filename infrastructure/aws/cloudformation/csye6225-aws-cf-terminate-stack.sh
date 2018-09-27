@@ -13,3 +13,16 @@ read Stack_Name
 # Delete the Stack
 
 aws cloudformation delete-stack --stack-name $Stack_Name
+<<<<<<< HEAD
+
+Success=$(aws cloudformation wait stack-delete-complete --stack-name $Stack_Name)
+if [[ -z "$Success" ]]
+then
+  echo "$Stack_Name stack is deleted successfully"
+else
+  echo "Deletion of $Stack_Name stack failed."
+  echo "$Success"
+  exit 1
+fi
+=======
+>>>>>>> 1909cc20d636d80ed7e67d6b3ffa7177bcef9a77
