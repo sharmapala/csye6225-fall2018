@@ -11,6 +11,7 @@
 #    This shell script leverages the AWS Command Line Interface (AWS CLI) to
 #    automatically create a custom VPC.
 
+
 if [ $# -eq 0 ]; then
 echo "PLEASE PASS <STACK_NAME> as parameter while running your script"
 exit 1
