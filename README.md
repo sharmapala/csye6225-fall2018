@@ -10,10 +10,6 @@
  - **Email Id**- chawla.g@husky.neu.edu
  - **NUID** - 001859169
 
-### Yaggesh Likher</br>
- - **Email Id** - likhar.y@husky.neu.edu
- - **NUID** - 001812051
-
 ### Dhanisha Phadate</br>
  - **Email Id** -phadate.d@husky.neu.edu
  - **NUID** - 001859234
