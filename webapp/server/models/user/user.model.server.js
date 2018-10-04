@@ -3,12 +3,8 @@
 // var userModel =  mongoose.model("UserModel", userSchema);
 
 var db =  require("../database");
-var Sequelize = require("sequelize");
 
-var userModel = db.define("Users", {
-    username: Sequelize.STRING,
-    password: Sequelize.STRING
-})
+var userModel = db.users;
 
 
 //var user = {'username': 'ytrr' , 'password':'err'};

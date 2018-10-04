@@ -17,7 +17,7 @@
                 controller: "loginController",
                 controllerAs: "model"
             })
-            .when("/user/register", {
+            .when("/register", {
                 templateUrl: "views/user/templates/register.view.client.html",
                 controller: "registerController",
                 controllerAs: "model"
@@ -25,6 +25,30 @@
             .when("/user", {
                 templateUrl: "views/user/templates/profile.view.client.html",
                 controller: "profileController",
+                controllerAs: "model",
+                resolve: {
+                    user: checkLogin
+                }
+            })
+            .when("/transaction", {
+                templateUrl: "views/transaction/templates/transaction-list.view.client.html",
+                controller: "transactionListController",
+                controllerAs: "model",
+                resolve: {
+                    user: checkLogin
+                }
+            })
+            .when("/transaction/new", {
+                templateUrl: "views/transaction/templates/transaction-new.view.client.html",
+                controller: "transactionNewController",
+                controllerAs: "model",
+                resolve: {
+                    user: checkLogin
+                }
+            })
+            .when("/transaction/:tid", {
+                templateUrl: "views/transaction/templates/transaction-edit.view.client.html",
+                controller: "transactionEditController",
                 controllerAs: "model",
                 resolve: {
                     user: checkLogin

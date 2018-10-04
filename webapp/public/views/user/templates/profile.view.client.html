@@ -12,10 +12,10 @@
             {{model.updateSuccessMessage}}
         </div>
         <label>Welcome {{model.user.username}}</label>
-        <div>Current time is: {{model.time.currentTime}}</div>
 
         <a class="btn btn-default btn-block btn-danger"
            href="#!/login"
+           ng-click="model.logout()"
            role="button">Logout</a>
     </div>
 </div>

@@ -1,4 +1,5 @@
-var q = require('q');
+// var q = require('q');
+const db = {}
 const Sequelize = require('sequelize');
 //var connectionString = 'mysql://127.0.0.1:3306/registeredMembers';
 const sequelize = new Sequelize('registeredMembers', 'root', '', {
@@ -6,6 +7,12 @@ const sequelize = new Sequelize('registeredMembers', 'root', '', {
     dialect: 'mysql',
     port:3306
 });
+
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+
+db.users = require("../models/user/user.schema.server")(sequelize, Sequelize);
+db.transactions = require("../models/transaction/transaction.schema.server")(sequelize, Sequelize);
  // for local
 // if(process.env.MLAB_USERNAME_WEBDEV) { // check if running remotely
 //     var username = process.env.MLAB_USERNAME_WEBDEV; // get from environment
@@ -13,7 +20,8 @@ const sequelize = new Sequelize('registeredMembers', 'root', '', {
 //     connectionString = 'mongodb://' + username + ':' + password;
 //     connectionString += '@ds149382.mlab.com:49382/heroku_v33hz0kp'; // user yours
 // }
-var db = sequelize;
+
+db.users.hasMany(db.transactions);
 // .authenticate()
 // .then(() => {
 //   console.log('Connection has been established successfully.');
