@@ -25,7 +25,7 @@
                         model.errorMessage = "User Not Found"
                     }
                     else {
-                        $location.url("/user");
+                        $location.url("/transaction");
                     }
                 });
         }

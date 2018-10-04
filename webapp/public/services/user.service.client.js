@@ -9,7 +9,8 @@
             "getTime": getTime,
             "registerUser": registerUser,
             "findUserByUsername": findUserByUsername,
-            "checkLogin": checkLogin
+            "checkLogin": checkLogin,
+            "logoutUser": logoutUser
         };
 
         return _api;
@@ -56,6 +57,12 @@
                 }, function (err) {
                     return null;
                 });
+        }
+
+
+        function logoutUser(){
+            var url = "/api/logout";
+            return $http.get(url);
         }
     }
 })();
