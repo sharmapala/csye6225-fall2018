@@ -32,23 +32,23 @@ mysql -u root
 Running on: https://localhost:4000
 
 ## 4.Instructions to run unit, integration and/or load tests. </br>
-a. Get request</br>
- Run this url - http://localhost:4000/time </br>
- Result- current time should get displayed
+a. Post request</br>
+ Result- Register the user , with username as email and password.
  
-b. Post request </br>
- Run this url - http://localhost:4000/user/register </br>
- Result: 1.User will registered if not existing </br>
-         2. "User already exist" if user is present
+b. Post request</br>
+ Result- Login the app with the credentials(Hashed passwords will be compared)
+ 
+c. Post request</br>
+ Result- Go to the transactions page, and enter all the values
+ 
+d. Get request</br>
+ Result- Get the transactions for the user.
+ 
+e. Perform CRUD operations (Create, Delete, Update and Read)
+f. Added Authentication to destroy the session of the user once "LOGOUT".
 
-c. Post request </br>
-  a.Post request to login 
-    Run this url - http://localhost:4000/api/login </br>
-    Result: 1.User will be loggein </br>
-            2. Get Request to check current time.
-               Run this url - http://localhost:4000/time </br>
 
-  b.GET Request to check current time without login.
-    Run this url - http://localhost:4000/time </br>
-    Result: 1. Remove the authorization. Result recieved will be "unauthorized".
+
+ 
+
     
