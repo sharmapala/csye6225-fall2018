@@ -1,17 +1,18 @@
 var app = require("../../express");
 var passport = require("passport");
 var userModel = require("../models/user/user.model.server");
-var BasicStrategy = require('passport-http').BasicStrategy;
+// var BasicStrategy = require('passport-http').BasicStrategy;
 var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt');
 var email_validator = require("email-validator");
 
-passport.use(new BasicStrategy(basicStrategy));
+// passport.use(new BasicStrategy(basicStrategy));
 passport.use(new LocalStrategy(localStrategy));
 
+app.get("/api/logout", logoutUser);
 app.post("/user/register", registerUser);
 app.get("/api/user/", findUserByUserName);
-app.get("/time/",passport.authenticate('basic', { session: false }), getTime);
+// app.get("/time/",passport.authenticate('basic', { session: false }), getTime);
 app.post("/api/login/",passport.authenticate('local'), login);
 app.get("/api/checkLogin", checkLogin);
 
@@ -36,25 +37,25 @@ function deserializeUser(user, done) {
 }
 
 
-function basicStrategy(username, password, done) {
-    console.log(username+"-----------"+password);
-    userModel.findUserByUserName(username)
-        .then(function (user) {
-            if(!user) {
-                return done(null, false);
-            }
+// function basicStrategy(username, password, done) {
+//     console.log(username+"-----------"+password);
+//     userModel.findUserByUserName(username)
+//         .then(function (user) {
+//             if(!user) {
+//                 return done(null, false);
+//             }
 
-            bcrypt.compare(password, user.password, function(err, res){
-                if(res)
-                    return done(null, user);
-            });
+//             bcrypt.compare(password, user.password, function(err, res){
+//                 if(res)
+//                     return done(null, user);
+//             });
             
-        }, function (err) {
-            if(err) {
-                return done(err);
-            }
-        });
-}
+//         }, function (err) {
+//             if(err) {
+//                 return done(err);
+//             }
+//         });
+// }
 
 function localStrategy(username, password, done) {
     console.log(username+"-----------"+password);
@@ -80,15 +81,15 @@ function checkLogin(request, response) {
     response.send(request.isAuthenticated() ? request.user : "0");
 }
 
-function getTime(request, response){
-    if(request.isAuthenticated()){
-   var time =  userModel.getTime();
-            response.json(time);
-    }
-    else{
-        response.json("User not logged in");
-    }
-}
+// function getTime(request, response){
+//     if(request.isAuthenticated()){
+//    var time =  userModel.getTime();
+//             response.json(time);
+//     }
+//     else{
+//         response.json("User not logged in");
+//     }
+// }
 
 function login(request, response) {
     var user = request.user;
@@ -110,12 +111,18 @@ function findUserByUserName(request, response) {
         });
 }
 
+function logoutUser(request, response){
+    console.log("Inside Logout")
+    request.logout();
+    response.redirect('/');
+}
+
 function registerUser(request, response) {
     var user = request.body;
     if(user.username === "" || user.password === "" || user.password1 === "")
-        response.json("Username or Password cannot be empty");
+        return response.json("Username or Password cannot be empty");
     if(!email_validator.validate(user.username)){
-        response.json("Enter correct email address");
+        return response.json("Enter correct email address");
     }
     userModel.findUserByUserName(user.username)
     .then(function (_user){
@@ -124,12 +131,12 @@ function registerUser(request, response) {
                 user.password = hash;
                 userModel.createUser(user)
                 .then(function (user) {
-                    response.json(user);
+                    return response.json(user);
                 });
             });
         }
         else{
-            response.json("User already exists");
+            return response.json("User already exists");
         }
     });
     

@@ -9,6 +9,7 @@
         var userId = user.username;
 
         model.updateUser = updateUser;
+        model.logout = logout;
         model.unregisterUser = unregisterUser;
 
         function init() {
@@ -36,5 +37,14 @@
                     $location.url("/login");
                 });
         }
+
+
+        function logout() {
+            userService.logoutUser()
+                .then(function () {
+                    $location.url("/login");
+                });
+        }
     }
+
 })();

@@ -1,0 +1,76 @@
+
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-text pull-left">
+                <a class="navbar-link" href="#!/transaction">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </a>
+        </div>
+
+        <div class="navbar-header col-xs-8">
+            <a class="navbar-brand" href="#">New transaction</a>
+        </div>
+
+        <div class="navbar-text pull-right">
+            <a class="navbar-link" ng-click="model.createTransaction(transaction)">
+                <span class="glyphicon glyphicon-ok"></span>
+            </a>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-3 visible-lg split-view-left">
+            <div ng-include="'views/transaction/templates/transaction-list.component.client.html'"></div>
+        </div>
+        <div class="col-xs-12 col-lg-9 split-view-right">
+            <label for="description">Description</label>
+            <input name = "description"
+                   ng-model = "transaction.description"
+                   placeholder="Description"
+                   class = "form-control"
+                   id = "description"/>
+
+            <label for="merchant">Merchant</label>
+            <input name = "merchant"
+                      ng-model = "transaction.merchant"
+                      placeholder="Merchant"
+                      rows="5"
+                      class = "form-control"
+                      id = "merchant" />
+
+            <label for="amount">Amount</label>
+            <input name = "amount"
+                    ng-model = "transaction.amount"
+                    placeholder="Amount"
+                    rows="5"
+                    class = "form-control"
+                    id = "amount"/>
+
+            <label for="merchant">Date</label>
+            <input name = "date"
+                      ng-model = "transaction.date"
+                      placeholder="Date"
+                      rows="5"
+                      class = "form-control"
+                      id = "date" />
+
+            <label for="category">Category</label>
+            <input name = "category"
+                      ng-model = "transaction.category"
+                      placeholder="Category"
+                      rows="5"
+                      class = "form-control"
+                      id = "category" />
+
+            <a class="btn btn-default btn-block btn-primary"
+               ng-click="model.createTransaction(transaction)"
+               role="button">Create</a>
+
+            <a class="btn btn-default btn-block btn-danger"
+               href="#!/transaction"
+               role="button">Cancel</a>
+        </div>
+    </div>
+</div>
+<div ng-include="'views/common/footer.view.client.html'"></div>
