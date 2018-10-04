@@ -1,0 +1,78 @@
+input, textarea.form-control, select.form-control, #upload, #search {
+    margin-bottom: 5px;
+}
+
+body {
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+
+.navbar-default {
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+
+.navbar-default .navbar-brand, .navbar-default .navbar-link, .navbar-link {
+    color: white;
+}
+
+.navbar-default .navbar-link:hover, .navbar-link:hover, .navbar-default .navbar-brand:hover {
+    color: lightgray;
+}
+
+.cog {
+    color: #337ab7;
+}
+
+.cog.navbar-link:hover {
+    color: black;
+}
+
+@media (min-width: 1200px) {
+    .col-lg-9.split-view-right {
+        width: 75%;
+        position: absolute;
+        right: 0;
+        top: 60px;
+        bottom: 60px;
+        overflow-y: scroll;
+    }
+}
+
+.split-view-left {
+    position: absolute;
+    top: 60px;
+    bottom: 60px;
+    z-index: 1;
+    overflow-y: scroll;
+}
+
+.wd-widget{
+    margin-bottom: 10px;
+}
+
+.wd-widget > img, .wd-widget > iframe{
+    width: 100%;
+}
+
+.wd-widget > .wd-widget-toolbar{
+    position: absolute;
+    right: 15px;
+    background-color: white;
+    padding: 5px;
+    opacity: 0.9;
+    border-bottom-left-radius: 10px;
+    z-index: 1;
+}
+
+.form-control.wd-widget-choose{
+    border-color: white;
+    box-shadow: none;
+}
+
+.disable{
+    pointer-events: none;
+}
+
+
+
