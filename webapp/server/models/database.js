@@ -13,6 +13,7 @@ db.sequelize = sequelize;
 
 db.users = require("../models/user/user.schema.server")(sequelize, Sequelize);
 db.transactions = require("../models/transaction/transaction.schema.server")(sequelize, Sequelize);
+db.attachments = require("../models/attachment/attachment.schema.server")(sequelize, Sequelize);
  // for local
 // if(process.env.MLAB_USERNAME_WEBDEV) { // check if running remotely
 //     var username = process.env.MLAB_USERNAME_WEBDEV; // get from environment
@@ -22,6 +23,7 @@ db.transactions = require("../models/transaction/transaction.schema.server")(seq
 // }
 
 db.users.hasMany(db.transactions);
+db.transactions.hasMany(db.attachments);
 // .authenticate()
 // .then(() => {
 //   console.log('Connection has been established successfully.');
