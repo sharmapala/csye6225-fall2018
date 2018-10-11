@@ -11,7 +11,9 @@
     </li>
     <li ng-repeat="transaction in model.transactions" class="list-group-item">
         <div class="row">
-            <div class="col-xs-10">{{transaction.description}}</div>
+                <a class="navbar-link cog" href="#!/user/transaction/{{transaction.id}}/attachment">
+                    <div class="col-xs-10">{{transaction.description}}</div>
+                </a>
             <div class="col-xs-2">
                 <a class="navbar-link cog" href="#!/transaction/{{transaction.id}}">
                     <span class="pull-right glyphicon glyphicon-cog" />

@@ -54,10 +54,34 @@
                     user: checkLogin
                 }
             })
+            .when("/transaction/:tid/attachment", {
+                templateUrl: "views/attachment/templates/attachment-list.view.client.html",
+                controller: "attachmentListController",
+                controllerAs: "model",
+                resolve: {
+                    user: checkLogin
+                }
+            })
+            .when("/transaction/:tid/attachment/new", {
+                templateUrl: "views/attachment/templates/attachment-new.view.client.html",
+                controller: "attachmentController",
+                controllerAs: "model",
+                resolve: {
+                    user: checkLogin
+                }
+            })
+            .when("/transaction/:tid/attachment/:aid", {
+                templateUrl: "views/attachment/templates/attachment-edit.view.client.html",
+                controller: "attachmentEditController",
+                controllerAs: "model",
+                resolve: {
+                    user: checkLogin
+                }
+            })
             .otherwise({
                 redirectTo: "/"
             });
-    }
+}
     
     function checkLogin(userService, $q, $location) {
         var deferred = $q.defer();
