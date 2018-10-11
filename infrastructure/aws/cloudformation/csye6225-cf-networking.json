@@ -59,6 +59,7 @@
             
         },
 
+
         "PublicSubnetCidrBlock1":{
             "Type":"String",
             "Default":"10.0.4.0/24",
@@ -329,6 +330,16 @@
         }
     },
         
+    "DBsubnetGroup":{
+        "Type" : "AWS::RDS::DBSubnetGroup",
+        "Properties" : {
+           "DBSubnetGroupDescription" : "DB SUbnet group for RDS instance",
+           "DBSubnetGroupName" : "RDSSubnetGroup",
+           "SubnetIds" : [ {"Ref": "PrivateSubnet1" },
+            {"Ref": "PrivateSubnet2" }]
+           
+        }
+     },
         "InternetGateway": {
             "Type": "AWS::EC2::InternetGateway",
             "Properties": {
