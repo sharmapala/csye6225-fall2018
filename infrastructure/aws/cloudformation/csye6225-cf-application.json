@@ -8,11 +8,23 @@
               "Type":"String"
               
           },
-            "SubnetId":{
+            "SubnetIdwebserver":{
               "Description":"SUbnet ID to associate web server",
               "Type":"String"
               
           },
+          
+          "S3bucketname":{
+            "Description":"S3 bucket name",
+            "Type":"String"
+            
+        },
+
+          "DBsubnetgroup":{
+            "Description":"DB Subnet group to associate RDS instance",
+            "Type":"String"
+            
+        },
         "KeyName": {
             "Description": "Name of an EC2 KeyPair to enable SSH access to the instance.",
             "Type": "AWS::EC2::KeyPair::KeyName",
@@ -39,7 +51,7 @@
               "InstanceType": "t2.micro",
               "SecurityGroupIds" : [ {"Ref" : "WebServerSecurityGroup"} ],
               "KeyName"        : { "Ref" : "KeyName" },
-              "SubnetId" : {"Ref": "SubnetId"},
+              "SubnetId" : {"Ref": "SubnetIdwebserver"},
               "BlockDeviceMappings": [{
                 "DeviceName":"/dev/sda1",
                 "Ebs":{
@@ -93,6 +105,57 @@
 
         },
 
+        "Dynamodb":{
+            "Type" : "AWS::DynamoDB::Table",
+            "Properties" : {
+              "AttributeDefinitions" : [ 
+                {
+                    "AttributeName": "id",
+                    "AttributeType": "S"
+                  }
+        ],
+        "ProvisionedThroughput":{
+            "ReadCapacityUnits" : 10,
+            "WriteCapacityUnits" : 5
+        },
+              "KeySchema" : [ {
+                "AttributeName" : "id" ,
+                "KeyType" : "HASH"
+              } ],
+              "TableName" : "csye6225"
+            }
+
+        },
+
+        "S3Bucket":{
+            "Type" : "AWS::S3::Bucket",
+            "Properties" : {
+                "AccessControl": "PublicReadWrite",
+               "BucketName" : {"Ref": "S3bucketname"}
+            }
+          },
+       
+        
+        "RDSInstance":{
+            "Type" : "AWS::RDS::DBInstance",
+            "Properties" :
+            {
+              "AllocatedStorage" : "5",
+              "DBInstanceClass" : "db.t2.medium",
+              "DBInstanceIdentifier" : "csye6225-fall2018",
+              "DBName" : "csye6225",
+              "DBSubnetGroupName" : {"Ref": "DBsubnetgroup"},
+              "Engine" : "mariadb",
+              "EngineVersion" : "10.2.12",
+              "MasterUsername" : "csye6225master",
+              "MasterUserPassword" : "csye6225password",
+              "MultiAZ" : "false",
+              "Port" : "3306",
+              "PubliclyAccessible" : "false",
+              "StorageType" : "gp2",
+              "VPCSecurityGroups" : [ {"Ref": "DBSecurityGroup"}]
+            }
+          },
 
         "DBSecurityGroup":{
           "Type" : "AWS::EC2::SecurityGroup",
