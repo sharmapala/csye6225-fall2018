@@ -44,7 +44,15 @@ c. Post request</br>
 d. Get request</br>
  Result- Get the transactions for the user.
  
-e. Perform CRUD operations (Create, Delete, Update and Read)
+e. Perform CRUD operations on the transactions(Create, Delete, Update and Read)
+FOR EACH TRANSACTION :
+With : NODE_ENV=dev node server.js(Uploading the images on S3 bucket for which credentials are stored in ENV variables.)
+With : node server.js(Storing the attachments locally)
+ a. POST request : Add a png or jpeg file displying the receipt of the transaction.
+ b. GET request : Display all the added attachments for the particular transaction once the user click on the hyperlink.
+ c. PUT request : Request to update the exixting attachment with a new one.
+ d. DELETE request : Delete the attachment for the particular transaction.
+ 
 f. Added Authentication to destroy the session of the user once "LOGOUT".
 
 
