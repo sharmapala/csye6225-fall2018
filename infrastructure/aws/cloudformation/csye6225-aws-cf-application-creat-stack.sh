@@ -70,6 +70,14 @@ echo -e "\n"
 echo "Choose 1 Key which you want to use!"
 read KEY_CHOSEN
 
+echo -e "\n"
+echo "Enter S3 Bucket Name ie your domain Name, csye6225-fall2018-huskyid.me"
+read S3_Bucket
+
+echo -e "\n"
+echo "Please enter DBSubnet Group Name."
+read DBSubnet_Group
+
 #Functions
 #-------------------------------------------------------------------------------
 # Retrieve the status of a cfn stack
@@ -138,7 +146,7 @@ file_dir_var="file://$dir_var/csye6225-cf-application.json"
 aws cloudformation create-stack \
 	--stack-name $Stack_Name  \
 	--template-body $file_dir_var \
-	--parameters  ParameterKey="VPC",ParameterValue=$vpc_id ParameterKey="SubnetId",ParameterValue=$PUBLIC_SUBNET_CHOSEN ParameterKey="KeyName",ParameterValue=$KEY_CHOSEN ParameterKey="SSHLocation",ParameterValue="0.0.0.0/0" \
+	--parameters  ParameterKey="VPC",ParameterValue=$vpc_id ParameterKey="SubnetIdwebserver",ParameterValue=$PUBLIC_SUBNET_CHOSEN ParameterKey="KeyName",ParameterValue=$KEY_CHOSEN ParameterKey="SSHLocation",ParameterValue="0.0.0.0/0" ParameterKey="S3bucketname",ParameterValue=$S3_Bucket ParameterKey="DBsubnetgroup",ParameterValue=$DBSubnet_Group \
 	--disable-rollback
 
 # aws cloudformation create-stack \

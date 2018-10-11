@@ -1,0 +1,34 @@
+
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-text pull-left">
+            <a class="navbar-link" href="#!/transaction">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+            </a>
+        </div>
+
+        <div class="navbar-header col-xs-8">
+            <a class="navbar-brand" href="#">attachments</a>
+        </div>
+
+        <div class="navbar-text pull-right">
+            <a class="navbar-link"
+               href="#!/transaction/{{model.transactionId}}/attachment/new">
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div ng-repeat="attachment in model.attachments" class="wd-widget">
+        <div class="wd-widget-toolbar">
+            <a href="#!/transaction/{{model.transactionId}}/attachment/{{attachment.id}}">
+                <span class="glyphicon glyphicon-cog"></span>
+            </a>
+        </div>
+        <img ng-src = "{{attachment.url}}" />
+    </div>
+</div>
+<div ng-include="'views/common/footer.view.client.html'"></div>
+    </div>
+</nav>

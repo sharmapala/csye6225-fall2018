@@ -13,10 +13,10 @@
         var userId = user.id;
         function init(){
             model.userId = userId;
-            transactionService.getTransactions(userId)
-                .then(function (transactions) {
-                    model.transactions = transactions;
-                });
+            // transactionService.getTransactions(userId)
+            //     .then(function (transactions) {
+            //         model.transactions = transactions;
+            //     });
         }
         init();
 
