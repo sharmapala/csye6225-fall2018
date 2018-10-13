@@ -18,6 +18,7 @@
             "Description":"S3 bucket name",
             "Type":"String"
             
+            
         },
 
           "DBsubnetgroup":{
@@ -131,6 +132,9 @@
             "Type" : "AWS::S3::Bucket",
             "Properties" : {
                 "AccessControl": "PublicReadWrite",
+                "VersioningConfiguration" : {
+                    "Status": "Enabled"
+                  },
                "BucketName" : {"Ref": "S3bucketname"}
             }
           },
