@@ -1,1 +1,36 @@
-
+language: node_js #Specifying the server
+node_js: #All the versions supported
+- '7'
+- '7.6'
+- '8'
+services: #mariadb database 
+- mysql
+#before_install:
+  #- mysql -u root --password="" < test/travis.sql
+cache: #speed up build time on Travis by not having to npm every time.
+  directories:
+    - node_modules
+deploy:
+- provider: s3
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  local_dir: webapp_upload #uploads the server folder of the code to S3
+  skip_cleanup: true
+  on: &2
+    repo: Phadated/csye6225-fall2018
+  bucket: cloudtestbucket12345
+  region: us-east-1
+- provider: codedeploy
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  bucket: cloudtestbucket12345
+  key: webapp.zip
+  bundle_type: zip
+  application: TestApp
+  deployment_group: cloudassignment
+  region: us-east-1
+  on: *2
+script:
+  - zip -r webapp *
+  - mkdir -p webapp_upload
+  - mv webapp.zip dpl_cd_upload/webapp.zip
