@@ -33,4 +33,4 @@ deploy:
 script:
   - zip -r webapp *
   - mkdir -p webapp_upload
-  - mv webapp.zip dpl_cd_upload/webapp.zip
+  - mv webapp.zip webapp_upload/webapp.zip
