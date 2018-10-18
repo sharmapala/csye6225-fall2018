@@ -17,7 +17,7 @@ deploy:
   local_dir: webapp_upload #uploads the server folder of the code to S3
   skip_cleanup: true
   on: &2
-    repo: Phadated/csye6225-fall2018
+    repo: sharmapala/csye6225-fall2018
   bucket: cloudtestbucket12345
   region: us-east-1
 - provider: codedeploy
