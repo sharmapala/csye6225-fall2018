@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-
-pm2 start /home/centos/webapp
+cd /home/centos/webapp
+pm2 start server.js 
