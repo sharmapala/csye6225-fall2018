@@ -105,9 +105,9 @@ function findUserByUserName(request, response) {
     var username = request.query.username;
     userModel.findUserByUserName(username)
         .then(function (user) {
-            response.json(user);
+            return response.json(user);
         }, function (err) {
-            response.sendStatus(404).send(err);
+            return response.sendStatus(404).send(err);
         });
 }
 
