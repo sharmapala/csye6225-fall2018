@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-cd ~/node
+cd /home/centos/webapp
 pm2 stop www || true
