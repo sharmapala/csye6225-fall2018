@@ -4,11 +4,15 @@ files:
   - source: /webapp/
     destination: /home/centos/webapp
 hooks:
+  BeforeInstall:
+    - location: scripts/install.sh
+      timeout: 300
   AfterInstall:
-    - location: scripts/npm-install.sh
-      runas: root
-      timeout: 60
+    - location: scripts/post_install.sh
+      timeout: 600
   ApplicationStart:
-    - location: scripts/npm-start.sh
-      runas: root
-      timeout: 60
+    - location: scripts/run.sh
+      timeout: 120
+  ApplicationStop:
+    - location: scripts/stop.sh
+      timeout: 120
