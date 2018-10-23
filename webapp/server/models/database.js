@@ -4,7 +4,7 @@ const Sequelize = require('sequelize');
 //var connectionString = 'mysql://127.0.0.1:3306/registeredMembers';
 var sequelize;
 if(process.env.RDS_HOSTNAME){
-sequelize = new Sequelize('registeredMembers', 'root', '', {
+sequelize = new Sequelize('csye6225', 'root', '', {
     host     : process.env.RDS_HOSTNAME,
     user     : process.env.RDS_USERNAME,
     password : process.env.RDS_PASSWORD,
