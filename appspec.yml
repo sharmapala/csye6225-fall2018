@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /webapp/
-    destination: /home/ubuntu/webapp
+    destination: /home/centos/webapp
 hooks:
   AfterInstall:
     - location: scripts/npm-install.sh
