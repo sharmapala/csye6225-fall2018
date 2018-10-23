@@ -119,6 +119,7 @@ function logoutUser(request, response){
 
 function registerUser(request, response) {
     var user = request.body;
+    console.log(user);
     if(user.username === "" || user.password === "" || user.password1 === "")
         return response.json("Username or Password cannot be empty");
     if(!email_validator.validate(user.username)){

@@ -22,11 +22,10 @@ function getTime(){
 }
 
 function createUser(user) {
-   // userModel.sync({force: true}).then(() => {
-     //   console.log("user" + user);
+//    userModel.sync({force: true});
+       // console.log("user" + user);
         return userModel.create(user);
         
-     // });
     
 }
 

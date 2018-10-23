@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 set -e
-
+cd /home/centos/webapp
 npm install
 
 # setup NODE_ENV
+export RDS_HOSTNAME=csye6225-fall2018.coh3ahyiuez7.us-east-1.rds.amazonaws.com
+export RDS_USERNAME=csye6225master
+export RDS_PASSWORD=csye6225password
+export RDS_PORT=3306
+export DEPLOYMENT_GROUP_NAME=deploy
 if [ ! -z "$DEPLOYMENT_GROUP_NAME" ]; then
     export NODE_ENV=$DEPLOYMENT_GROUP_NAME
 
