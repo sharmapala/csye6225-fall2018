@@ -27,8 +27,8 @@ deploy:
   bucket: code-deploy.csye6225-fall2018-sharmapa.me
   key: webapp.zip
   bundle_type: zip
-  application: TestApp
-  deployment_group: cloudassignment1
+  application: DeployNodeJSapplication
+  deployment_group: deploy
   region: us-east-1
   on: *2
 script:
