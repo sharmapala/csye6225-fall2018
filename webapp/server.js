@@ -22,4 +22,4 @@ app.use(express.static(__dirname + '/public'));
 
 require("./server/app");
 
-app.listen(process.env.PORT || 4000 , "0.0.0.0");
+app.listen(process.env.PORT || 4000 );
