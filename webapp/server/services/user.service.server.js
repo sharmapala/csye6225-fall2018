@@ -105,7 +105,7 @@ function findUserByUserName(request, response) {
     var username = request.query.username;
     userModel.findUserByUserName(username)
         .then(function (user) {
-            return response.json(user);
+           return response.json(user);
         }, function (err) {
             return response.sendStatus(404).send(err);
         });
@@ -119,7 +119,6 @@ function logoutUser(request, response){
 
 function registerUser(request, response) {
     var user = request.body;
-    console.log(user);
     if(user.username === "" || user.password === "" || user.password1 === "")
         return response.json("Username or Password cannot be empty");
     if(!email_validator.validate(user.username)){
