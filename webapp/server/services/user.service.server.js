@@ -11,7 +11,7 @@ passport.use(new LocalStrategy(localStrategy));
 
 app.get("/api/logout", logoutUser);
 app.post("/user/register", registerUser);
-app.get("/api/user/", findUserByUserName);
+app.get("/api/user", findUserByUserName);
 // app.get("/time/",passport.authenticate('basic', { session: false }), getTime);
 app.post("/api/login/",passport.authenticate('local'), login);
 app.get("/api/checkLogin", checkLogin);
@@ -107,7 +107,7 @@ function findUserByUserName(request, response) {
         .then(function (user) {
            return response.json(user);
         }, function (err) {
-            return response.sendStatus(404).send(err);
+            return response.json(err);
         });
 }
 
