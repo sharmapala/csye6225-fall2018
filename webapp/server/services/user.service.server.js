@@ -13,7 +13,7 @@ app.get("/api/logout", logoutUser);
 app.post("/user/register", registerUser);
 app.get("/api/user", findUserByUserName);
 // app.get("/time/",passport.authenticate('basic', { session: false }), getTime);
-app.post("/api/login/",passport.authenticate('local'), login);
+app.post("/api/login",passport.authenticate('local'), login);
 app.get("/api/checkLogin", checkLogin);
 
 passport.serializeUser(serializeUser);

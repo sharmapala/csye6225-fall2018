@@ -50,7 +50,7 @@
 
         function login(username, password)
         {
-            var url = "/api/login/";
+            var url = "/api/login";
             return $http.post(url, {username: username, password: password})
                 .then(function(response){
                     return response.data;
