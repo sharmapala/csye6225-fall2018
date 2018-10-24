@@ -22,4 +22,4 @@ app.use(express.static(__dirname + '/public'));
 
 require("./server/app");
 
-app.listen(4004, '0.0.0.0');
+app.listen(5000, '0.0.0.0');
