@@ -15,13 +15,13 @@ var upload;
 var attachment_url;
 var node_env = process.env.NODE_ENV;
 if(node_env == 'dev'){
-    var credentials = {
-        "accessKeyId": process.env.AWSKEY, 
-        "secretAccessKey": process.env.AWSSECRETKEY
-    };
+    // var credentials = {
+    //     "accessKeyId": process.env.AWSKEY, 
+    //     "secretAccessKey": process.env.AWSSECRETKEY
+    // };
     var bucketname = process.env.BUCKETNAME;
     console.log(bucketname)
-    var s3 = new aws.S3(credentials);
+    var s3 = new aws.S3();
     // var params = {
     //     Bucket: 'cloudtest1234bucket',
     //     Key: '${req.body.filename}'
