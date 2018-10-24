@@ -2,7 +2,7 @@
 // var userSchema = require("./user.schema.server");
 // var userModel =  mongoose.model("UserModel", userSchema);
 
-var db =  require("../database");
+var db =  require(process.cwd()+"/server/models/database");
 
 var userModel = db.users;
 

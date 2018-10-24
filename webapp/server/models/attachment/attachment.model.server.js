@@ -1,6 +1,6 @@
 
 
-var db =  require("../database");
+var db =  require(process.cwd()+"/server/models/database");
 
 var attachmentModel = db.attachments;
 

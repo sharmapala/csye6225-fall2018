@@ -1,6 +1,6 @@
-var app = require("../../express");
+var app = require(process.cwd()+"/express");
 var passport = require("passport");
-var userModel = require("../models/user/user.model.server");
+var userModel = require(process.cwd()+"/server/models/user/user.model.server");
 // var BasicStrategy = require('passport-http').BasicStrategy;
 var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt');

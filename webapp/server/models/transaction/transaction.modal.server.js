@@ -1,4 +1,4 @@
-var db =  require("../database");
+var db =  require(process.cwd()+"/server/models/database");
 
 transactionModel = db.transactions;
 
