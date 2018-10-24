@@ -24,6 +24,7 @@ sequelize = new Sequelize('registeredMembers', 'root', '', {
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
+console.log(sequelize);
 
 db.users = require(__dirname+"/user/user.schema.server")(sequelize, Sequelize);
 db.transactions = require(__dirname+"/transaction/transaction.schema.server")(sequelize, Sequelize);

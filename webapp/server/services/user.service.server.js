@@ -126,6 +126,7 @@ function registerUser(request, response) {
     }
     userModel.findUserByUserName(user.username)
     .then(function (_user){
+        console.log("user is " + _user);
         if(!_user) {
             bcrypt.hash(user.password, 10, function (err, hash) {
                 user.password = hash;
