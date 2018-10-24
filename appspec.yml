@@ -6,11 +6,11 @@ files:
 hooks:
   BeforeInstall:
     - location: scripts/install.sh
-      timeout: 400
+      timeout: 100
       
   AfterInstall:
     - location: scripts/post_install.sh
-      timeout: 600
+      timeout: 200
       
   ApplicationStart:
     - location: scripts/run.sh
