@@ -35,11 +35,11 @@ db.attachments = require("../models/attachment/attachment.schema.server")(sequel
 //     connectionString = 'mongodb://' + username + ':' + password;
 //     connectionString += '@ds149382.mlab.com:49382/heroku_v33hz0kp'; // user yours
 // }
-db.users.sync();
-db.attachments.sync();
-db.transactions.sync();
-db.users.hasMany(db.transactions);
-db.transactions.hasMany(db.attachments);
+// db.users.sync();
+// db.attachments.sync();
+// db.transactions.sync();
+// db.users.hasMany(db.transactions);
+// db.transactions.hasMany(db.attachments);
 // .authenticate()
 // .then(() => {
 //   console.log('Connection has been established successfully.');

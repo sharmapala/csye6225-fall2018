@@ -1,4 +1,5 @@
 var app = require('./express');
+var db =  require("./server/models/database");
 var express = app.express;
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
@@ -23,3 +24,9 @@ app.use(express.static(__dirname + '/public'));
 require("./server/app");
 
 app.listen(process.env.PORT || 5000, '0.0.0.0');
+
+db.users.sync();
+db.attachments.sync();
+db.transactions.sync();
+db.users.hasMany(db.transactions);
+db.transactions.hasMany(db.attachments);
