@@ -35,7 +35,7 @@ if(node_env == 'dev'){
             cb(null, {fieldName: file.fieldname});
           },
           key: function (req, file, cb) {
-            var path = '/uploads' + file.originalname;
+            var path = file.originalname;
             console.log(path);
             cb(null, path)
           },
@@ -44,7 +44,7 @@ if(node_env == 'dev'){
         })
       });
           bucket: bucketname,
-    attachment_url = 'https://s3.amazonaws.com/' + bucketname + '/uploads/';
+    attachment_url = 'https://s3.amazonaws.com/' + bucketname + '/';
 }
 else {
     upload = multer({ dest: __dirname+'/../../public/uploads' });
