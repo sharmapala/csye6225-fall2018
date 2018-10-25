@@ -6,9 +6,16 @@ aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE||CREATE_IN_
 echo "Enter the stack you want to delete"
 read Stack_Name
 
+echo -e "\n"
+echo "Enter S3 Bucket Name ie your domain Name, csye6225-fall2018-huskyid.me"
+read S3_Bucket
+
 #Inputs
 #=${1?param missing - Stack Name}
 # Stack_Name=${1?Error: Enter correct Stackname}
+
+#empty csye6225-fall2018-phadated.me bucket first
+aws s3 rm s3://$S3_Bucket --recursive
 
 # Delete the Stack
 

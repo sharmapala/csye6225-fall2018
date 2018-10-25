@@ -1,0 +1,306 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Cloud Formation to build Continuos Integration and deployment stack",
+    "Parameters":{
+
+        "Deploymentgroupname":{
+            "Description":"Deployment group name",
+            "Type":"String"
+
+        },
+
+        "codedeployapplicationname":{
+            "Description":"Code deploy application name",
+            "Type":"String"
+        },
+
+        "S3bucketname":{
+            "Description":"S3 bucket name",
+            "Type":"String"
+            
+            
+        },
+
+        "TagKey":{
+            "Description":"TagKey",
+            "Type":"String"
+            
+            
+        },
+
+        "TagValue":{
+            "Description":"TagValue",
+            "Type":"String"
+            
+            
+        }
+
+    },
+    
+    "Resources":{
+        "Webserverpolicy":{
+            "Type" : "AWS::IAM::Policy",
+            "Properties" : { 
+              "PolicyDocument" : {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Action": [
+                            "s3:Get*",
+                            "s3:List*",
+                            "s3:GetObject",
+                            "s3:PutObject",
+                            "s3:DeleteObject",
+                            "s3:PutObjectAcl"
+                        ],
+                        "Effect": "Allow",
+                        "Resource": "*"
+                    }
+                ]
+            },
+              "PolicyName" : "webserverS3policy",
+              "Roles" : [{"Ref": "WebServerServiceRole"}]
+              
+            }
+          },
+
+      
+
+        "WebserverroleInstanceProfile" : {
+            "Type" : "AWS::IAM::InstanceProfile",
+            "Properties" : {
+              "Path" : "/",
+              "InstanceProfileName":"WebserverroleInstanceProfile",
+              "Roles" : [
+                {
+                  "Ref" : "WebServerServiceRole"
+                }
+              ]
+            }
+          },
+
+        "WebServerServiceRole":{
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument":{
+              "Statement": [ {
+                 "Effect": "Allow",
+                 "Principal": {
+                    "Service": [ "ec2.amazonaws.com" ]
+                 },
+                 "Action": [ "sts:AssumeRole" ]
+              } ]
+           },
+              "Path": "/",
+              "RoleName": "WebServerServiceRole"
+            }
+          },
+        
+          
+
+        "CodeDeployServiceRole":{
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument":{
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Sid": "",
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": [
+                                "codedeploy.amazonaws.com"
+                            ]
+                        },
+                        "Action": "sts:AssumeRole"
+                    }
+                ]
+             
+           },
+           "ManagedPolicyArns": ["arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"],
+              "Path": "/",
+              "RoleName": "CodeDeployServiceRole"
+            }
+          },
+
+          "TravisCodeDeployPolicy":{
+            "Type" : "AWS::IAM::Policy",
+            "Properties" : { 
+              "PolicyDocument" : {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                      "Effect": "Allow",
+                      "Action": [
+                          "codedeploy:RegisterApplicationRevision",
+                          "codedeploy:GetApplicationRevision"
+                      ],
+                      "Resource": [
+
+                        {
+                          "Fn::Join": [
+                              "",
+                              [
+                                "arn:aws:codedeploy:us-east-1:", {"Ref": "AWS::AccountId"}, ":application:",
+                                  {"Ref": "codedeployapplicationname"}
+                              ]
+                          ]
+                      }
+                          
+                      ]
+                  },
+
+                  {
+                    "Effect": "Allow",
+                    "Action": [
+                        "codedeploy:CreateDeployment",
+                        "codedeploy:GetDeployment"
+                    ],
+                    "Resource": [
+                        "*"
+                    ]
+                },
+
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                      "codedeploy:GetDeploymentConfig"
+                  ],
+                  "Resource": [
+
+                  {
+                    "Fn::Join": [
+                        "",
+                        [
+                          "arn:aws:codedeploy:us-east-1:",
+                            {"Ref": "AWS::AccountId"}, ":deploymentconfig:CodeDeployDefault.OneAtATime"
+                        ]
+                    ]
+                },
+
+                {
+                  "Fn::Join": [
+                      "",
+                      [
+                        "arn:aws:codedeploy:us-east-1:",
+                        {"Ref": "AWS::AccountId"}, ":deploymentconfig:CodeDeployDefault.HalfAtATime"
+                      ]
+                  ]
+              },
+
+              {
+                "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:codedeploy:us-east-1:",
+                      {"Ref": "AWS::AccountId"}, ":deploymentconfig:CodeDeployDefault.AllAtOnce"
+                    ]
+                ]
+            }
+
+                  ]
+              }
+
+                ]
+            },
+              "PolicyName" : "TravisCodeDeployPolicy",
+              "Users" : [{"Ref": "TravisCiUser"}]
+              
+            }
+          },
+
+          "TravisDeployToS3":{
+            "Type" : "AWS::IAM::Policy",
+            "Properties" : { 
+              "PolicyDocument" : {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Action": [
+                        "s3:PutObject"
+                    ],
+                    "Resource": [
+                        "*"
+                    ]
+                }
+                ]
+            },
+              "PolicyName" : "TravisDeployToS3",
+              "Users" : [{"Ref": "TravisCiUser"}]
+              
+            }
+          },
+
+          "TravisCiUser" : {
+            "Type" : "AWS::IAM::User",
+            "Properties" : {
+               "Path" : "/",
+              "UserName": "TravisCiUser"
+               
+              }
+              },
+
+
+        "codedeployapplication":{
+            "Type" : "AWS::CodeDeploy::Application",
+            "Properties" : {
+              "ApplicationName" : {"Ref": "codedeployapplicationname"},
+              "ComputePlatform": "Server"
+            }
+          },
+
+        
+          
+          "DeploymentGroup" : {
+            "Type" : "AWS::CodeDeploy::DeploymentGroup",
+            "DependsOn":"codedeployapplication",
+            "Properties" : {
+              "ApplicationName" : {"Ref" : "codedeployapplication"},
+             
+              "DeploymentGroupName" : {"Ref": "Deploymentgroupname"},
+              "DeploymentStyle": {
+                    "DeploymentOption" : "WITHOUT_TRAFFIC_CONTROL",
+                    "DeploymentType" : "IN_PLACE"
+              },
+
+              "Ec2TagFilters" : [{
+                "Key" : {"Ref": "TagKey"},
+                "Type" : "KEY_AND_VALUE",
+                "Value" : {"Ref":"TagValue"}
+                
+            }],
+              "ServiceRoleArn" : {"Fn::GetAtt" : ["CodeDeployServiceRole", "Arn"] }
+      
+            }
+          },
+
+        "S3Bucketweb":{
+            "Type" : "AWS::S3::Bucket",
+            "Properties" : {
+                "AccessControl": "PublicReadWrite",
+               "BucketName" : {"Ref": "S3bucketname"}
+            }
+          }
+          
+    },
+    
+    "Outputs": {
+        "MyAWSAccountId":{
+            "Value":{
+              "Ref":"AWS::AccountId"
+            }
+          },
+          "MyApplication":{
+            "Value":{
+              "Ref":"codedeployapplication"
+            }
+          },
+          "MyDeploymentGroup":{
+            "Value":{
+              "Ref":"DeploymentGroup"
+            }
+          }
+        
+    }
+}
