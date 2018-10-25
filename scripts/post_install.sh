@@ -2,7 +2,7 @@
 set -e
 cd /home/centos
 sudo cp .env webapp
-cd /webapp
+cd webapp
 sudo chmod 666 .env
 npm install
 
