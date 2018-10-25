@@ -1,6 +1,6 @@
-var app = require("../../express");
+var app = require(process.cwd()+"/express");
 var passport = require("passport");
-var userModel = require("../models/user/user.model.server");
+var userModel = require(process.cwd()+"/server/models/user/user.model.server");
 // var BasicStrategy = require('passport-http').BasicStrategy;
 var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt');
@@ -11,9 +11,9 @@ passport.use(new LocalStrategy(localStrategy));
 
 app.get("/api/logout", logoutUser);
 app.post("/user/register", registerUser);
-app.get("/api/user/", findUserByUserName);
+app.get("/api/user", findUserByUserName);
 // app.get("/time/",passport.authenticate('basic', { session: false }), getTime);
-app.post("/api/login/",passport.authenticate('local'), login);
+app.post("/api/login",passport.authenticate('local'), login);
 app.get("/api/checkLogin", checkLogin);
 
 passport.serializeUser(serializeUser);
@@ -105,9 +105,9 @@ function findUserByUserName(request, response) {
     var username = request.query.username;
     userModel.findUserByUserName(username)
         .then(function (user) {
-            response.json(user);
+           return response.json(user);
         }, function (err) {
-            response.sendStatus(404).send(err);
+            return response.json(err);
         });
 }
 
@@ -126,6 +126,7 @@ function registerUser(request, response) {
     }
     userModel.findUserByUserName(user.username)
     .then(function (_user){
+        console.log("user is " + _user);
         if(!_user) {
             bcrypt.hash(user.password, 10, function (err, hash) {
                 user.password = hash;

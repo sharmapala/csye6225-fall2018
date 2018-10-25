@@ -1,7 +1,7 @@
-var app = require("../../express");
+var app = require(process.cwd()+"/express");
 var multerS3 = require('multer-s3');
 var aws = require('aws-sdk');
-var attachmentModel =  require("../models/attachment/attachment.model.server");
+var attachmentModel =  require(process.cwd()+"/server/models/attachment/attachment.model.server");
 var multer = require('multer'); // npm install multer --save
 
 // app.post("/api/transaction/:transactionId/attachment", createAttachment);
@@ -15,13 +15,13 @@ var upload;
 var attachment_url;
 var node_env = process.env.NODE_ENV;
 if(node_env == 'dev'){
-    var credentials = {
-        "accessKeyId": process.env.AWSKEY, 
-        "secretAccessKey": process.env.AWSSECRETKEY
-    };
+    // var credentials = {
+    //     "accessKeyId": process.env.AWSKEY, 
+    //     "secretAccessKey": process.env.AWSSECRETKEY
+    // };
     var bucketname = process.env.BUCKETNAME;
     console.log(bucketname)
-    var s3 = new aws.S3(credentials);
+    var s3 = new aws.S3();
     // var params = {
     //     Bucket: 'cloudtest1234bucket',
     //     Key: '${req.body.filename}'
@@ -35,7 +35,7 @@ if(node_env == 'dev'){
             cb(null, {fieldName: file.fieldname});
           },
           key: function (req, file, cb) {
-            var path = 'uploads/'+file.originalname;
+            var path = file.originalname;
             console.log(path);
             cb(null, path)
           },
@@ -44,7 +44,7 @@ if(node_env == 'dev'){
         })
       });
           bucket: bucketname,
-    attachment_url = 'https://s3.amazonaws.com/' + bucketname + '/uploads/';
+    attachment_url = 'https://s3.amazonaws.com/' + bucketname + '/';
 }
 else {
     upload = multer({ dest: __dirname+'/../../public/uploads' });

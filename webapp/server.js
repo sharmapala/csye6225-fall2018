@@ -1,4 +1,6 @@
-var app = require('./express');
+require('dotenv').config();
+var app = require(__dirname+"/express");
+var db =  require(__dirname+"/server/models/database");
 var express = app.express;
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
@@ -19,7 +21,14 @@ app.use(passport.session());
 app.set('view engine', 'ejs');
 
 app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/server'));
 
-require("./server/app");
+require(__dirname +"/server/app");
 
-app.listen(process.env.PORT || 4000);
+app.listen(process.env.PORT || 5050, '0.0.0.0');
+
+// db.users.sync();
+// db.attachments.sync();
+// db.transactions.sync();
+// db.users.hasMany(db.transactions);
+// db.transactions.hasMany(db.attachments);

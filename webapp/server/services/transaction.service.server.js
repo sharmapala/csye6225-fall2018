@@ -1,5 +1,5 @@
-var app = require("../../express");
-var transactionModel =  require("../models/transaction/transaction.modal.server");
+var app = require(process.cwd()+"/express");
+var transactionModel =  require(process.cwd()+"/server/models/transaction/transaction.modal.server");
 
 app.post("/api/user/:userId/transaction", createTransaction);
 app.get("/api/user/:userId/transaction", getTransactions);
