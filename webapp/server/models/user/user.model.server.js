@@ -2,7 +2,7 @@
 // var userSchema = require("./user.schema.server");
 // var userModel =  mongoose.model("UserModel", userSchema);
 
-var db =  require("../database");
+var db =  require(process.cwd()+"/server/models/database");
 
 var userModel = db.users;
 
@@ -22,11 +22,10 @@ function getTime(){
 }
 
 function createUser(user) {
-   // userModel.sync({force: true}).then(() => {
-     //   console.log("user" + user);
+//    userModel.sync({force: true});
+       // console.log("user" + user);
         return userModel.create(user);
         
-     // });
     
 }
 
