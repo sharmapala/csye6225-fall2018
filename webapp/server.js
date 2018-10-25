@@ -1,3 +1,4 @@
+require('dotenv').config();
 var app = require(__dirname+"/express");
 var db =  require(__dirname+"/server/models/database");
 var express = app.express;
