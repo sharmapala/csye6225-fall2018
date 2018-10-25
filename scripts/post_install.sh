@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 cd /home/centos
-sudo cp .env /webapp
+sudo cp .env webapp
 cd /webapp
 sudo chmod 666 .env
 npm install
