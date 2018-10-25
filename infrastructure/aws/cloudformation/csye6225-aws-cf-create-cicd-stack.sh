@@ -39,48 +39,46 @@ read Stack_Name
 # 	--output text)
 # echo $vpcname
 
-# Retrieving VPC ID
-echo -e "\n"
-echo "**SHOW VPC ID**"
-aws ec2 describe-vpcs
-
-echo "These are the VPC IDs you have!"
-echo "Which one do you want!"
-read vpc_id
-echo "VPC ID is '$vpc_id'"
-
-# PART 2 - FINDING SUBNETS
-echo -e "\n"
-echo "**SHOW SUBNETS**"
-aws ec2 describe-subnets
-
-echo "These are the Subnets you have!"
-echo "Which one do you want!"
-read PUBLIC_SUBNET_CHOSEN
-echo "You chose '$PUBLIC_SUBNET_CHOSEN'."
-
-# PART 4 - VPC NAME, VPC ID and PUBLIC SUBNET DISPLAY
-echo -e "\n"
-echo "VPC Name is '$vpcname', VPC ID is '$vpc_id' and the public subnet you chose is '$PUBLIC_SUBNET_CHOSEN'."
-
-
-echo "Displaying all keys!"
-aws ec2 describe-key-pairs
-echo -e "\n"
-echo "Choose 1 Key which you want to use!"
-read KEY_CHOSEN
+# # Retrieving VPC ID
+# echo -e "\n"
+# echo "**SHOW VPC ID**"
+# aws ec2 describe-vpcs
 
 echo -e "\n"
-echo "Enter S3 Bucket Name ie your domain Name, csye6225-fall2018-huskyid.me"
+echo "Enter the Deployment group name"
+read Deployment_group
+
+echo -e "\n"
+echo "Enter the Code deploy application name"
+read Codedeploy_appname
+
+# # PART 2 - FINDING SUBNETS
+# echo -e "\n"
+# echo "**SHOW SUBNETS**"
+# aws ec2 describe-subnets
+
+# echo "These are the Subnets you have!"
+# echo "Which one do you want!"
+# read PUBLIC_SUBNET_CHOSEN
+# echo "You chose '$PUBLIC_SUBNET_CHOSEN'."
+
+# echo "Displaying all keys!"
+# aws ec2 describe-key-pairs
+# echo -e "\n"
+# echo "Choose 1 Key which you want to use!"
+# read KEY_CHOSEN
+
+echo -e "\n"
+echo "Enter S3 Bucket Name , code-deploy.csye6225-fall2018-huskyid.me"
 read S3_Bucket
 
 echo -e "\n"
-echo "Please enter DBSubnet Group Name."
-read DBSubnet_Group
+echo "Please enter Tag Key of the ec2 instance you want to connect to deployment group."
+read Tag_key
 
 echo -e "\n"
-echo "Please enter WEbserver Instance profile name."
-read webserver_instanceprofile
+echo "Please enter Tag value of the ec2 instance you want to connect to deployment group."
+read Tag_value
 
 #Functions
 #-------------------------------------------------------------------------------
@@ -143,14 +141,15 @@ exitWithErrorMessage() {
 
 dir_var=$(pwd)
 # echo "Current Directory is '$dir_var'"
-file_dir_var="file://$dir_var/csye6225-cf-application.json"
+file_dir_var="file://$dir_var/csye6225-cf-cicd.json"
 
 #Create Stack
 
 aws cloudformation create-stack \
 	--stack-name $Stack_Name  \
 	--template-body $file_dir_var \
-	--parameters  ParameterKey="VPC",ParameterValue=$vpc_id ParameterKey="SubnetIdwebserver",ParameterValue=$PUBLIC_SUBNET_CHOSEN ParameterKey="KeyName",ParameterValue=$KEY_CHOSEN ParameterKey="SSHLocation",ParameterValue="0.0.0.0/0" ParameterKey="S3bucketname",ParameterValue=$S3_Bucket ParameterKey="DBsubnetgroup",ParameterValue=$DBSubnet_Group ParameterKey="WebserverInstanceProfile",ParameterValue=$webserver_instanceprofile \
+	--capabilities CAPABILITY_NAMED_IAM \
+	--parameters  ParameterKey="Deploymentgroupname",ParameterValue=$Deployment_group ParameterKey="codedeployapplicationname",ParameterValue=$Codedeploy_appname ParameterKey="S3bucketname",ParameterValue=$S3_Bucket ParameterKey="TagKey",ParameterValue=$Tag_key ParameterKey="TagValue",ParameterValue=$Tag_value \
 	--disable-rollback
 
 # aws cloudformation create-stack \

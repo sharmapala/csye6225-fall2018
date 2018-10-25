@@ -21,6 +21,12 @@
             
         },
 
+        "WebserverInstanceProfile":{
+            "Description":"InstanceProfile for web server",
+            "Type":"String"
+            
+        },
+
           "DBsubnetgroup":{
             "Description":"DB Subnet group to associate RDS instance",
             "Type":"String"
@@ -53,14 +59,84 @@
               "SecurityGroupIds" : [ {"Ref" : "WebServerSecurityGroup"} ],
               "KeyName"        : { "Ref" : "KeyName" },
               "SubnetId" : {"Ref": "SubnetIdwebserver"},
+              "IamInstanceProfile": {"Ref":"WebserverInstanceProfile"},
+              "Tags": [
+                {
+                    "Key": "Name",
+                    "Value": "webserver"
+
+                }
+            ],
+              "UserData" : { "Fn::Base64": {
+            "Fn::Join" : [
+              "",
+              [
+                "#!/bin/bash -xe\n",
+                "sudo yum update -y\n",
+                "sudo yum install -y gcc-c++ make\n",
+                "echo 'INSTALLING NODEJS using curl'\n",
+                "curl -sL https://rpm.nodesource.com/setup_6.x | sudo -E bash -\n",
+                "sudo yum install -y nodejs\n",
+                "node -v\n",
+                "echo 'Node.JS Installed'\n",
+                "python --version\n",
+                "echo 'Installing MARIADB'\n",
+                "sudo yum install mariadb-server mariadb-libs mariadb -y\n",
+                "echo NODE_ENV=dev > /home/centos/.env \n",
+                "echo DEPLOYMENT_GROUP_NAME=deploy >> /home/centos/.env \n",
+                "echo BUCKETNAME=",{"Ref":"S3bucketname"}," >> /home/centos/.env \n",
+                "echo RDS_PASSWORD=csye6225password >> /home/centos/.env \n",
+                "echo RDS_USERNAME=csye6225master >>/home/centos/.env \n",
+                "echo RDS_HOSTNAME=",{ "Fn::GetAtt": [
+                    "RDSInstance",
+                    "Endpoint.Address"
+                ] }, " >> /home/centos/.env \n",
+                "echo 'Getting the CODEDEPLOY Agent'\n",
+                "sudo yum install ruby -y\n",
+                "sudo yum install wget -y\n",
+                "cd /home/centos\n",
+                "wget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install\n",
+                "chmod +x ./install\n",
+                "sudo ./install auto\n",
+                "echo 'CODEDEPLOYAGENT Installed'\n",
+                "echo 'Starting the CodeDeploy Agent'\n",
+                "sudo service codedeploy-agent start\n",
+                "sudo service codedeploy-agent status\n",
+                "echo 'All installations done'\n"
+
+                 
+            ]]}
+            },
+
               "BlockDeviceMappings": [{
                 "DeviceName":"/dev/sda1",
                 "Ebs":{
                    "VolumeSize":"20",
                    "VolumeType":"gp2",
-                   "DeleteOnTermination":"false"
+                   "DeleteOnTermination":"true"
                 }}]
              
+            }
+          },
+
+          "RDSInstance":{
+            "Type" : "AWS::RDS::DBInstance",
+            "Properties" :
+            {
+              "AllocatedStorage" : "5",
+              "DBInstanceClass" : "db.t2.medium",
+              "DBInstanceIdentifier" : "csye6225-fall2018",
+              "DBName" : "csye6225",
+              "DBSubnetGroupName" : {"Ref": "DBsubnetgroup"},
+              "Engine" : "mariadb",
+              "EngineVersion" : "10.2.12",
+              "MasterUsername" : "csye6225master",
+              "MasterUserPassword" : "csye6225password",
+              "MultiAZ" : "false",
+              "Port" : "3306",
+              "PubliclyAccessible" : "false",
+              "StorageType" : "gp2",
+              "VPCSecurityGroups" : [ {"Ref": "DBSecurityGroup"}]
             }
           },
 
@@ -89,9 +165,33 @@
                 },
                 {
                     "IpProtocol": "tcp",
+                    "FromPort": "80",
+                    "ToPort": "80",
+                    "CidrIpv6": "::/0"
+                },
+                {
+                    "IpProtocol": "tcp",
                     "FromPort": "443",
                     "ToPort": "443",
                     "CidrIp": "0.0.0.0/0"
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": "443",
+                    "ToPort": "443",
+                    "CidrIpv6": "::/0"
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": "5050",
+                    "ToPort": "5050",
+                    "CidrIp": "0.0.0.0/0"
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": "5050",
+                    "ToPort": "5050",
+                    "CidrIpv6": "::/0"
                 },
                 {
                     "IpProtocol": "tcp",
@@ -132,34 +232,10 @@
             "Type" : "AWS::S3::Bucket",
             "Properties" : {
                 "AccessControl": "PublicReadWrite",
-                "VersioningConfiguration" : {
-                    "Status": "Enabled"
-                  },
                "BucketName" : {"Ref": "S3bucketname"}
             }
           },
        
-        
-        "RDSInstance":{
-            "Type" : "AWS::RDS::DBInstance",
-            "Properties" :
-            {
-              "AllocatedStorage" : "5",
-              "DBInstanceClass" : "db.t2.medium",
-              "DBInstanceIdentifier" : "csye6225-fall2018",
-              "DBName" : "csye6225",
-              "DBSubnetGroupName" : {"Ref": "DBsubnetgroup"},
-              "Engine" : "mariadb",
-              "EngineVersion" : "10.2.12",
-              "MasterUsername" : "csye6225master",
-              "MasterUserPassword" : "csye6225password",
-              "MultiAZ" : "false",
-              "Port" : "3306",
-              "PubliclyAccessible" : "false",
-              "StorageType" : "gp2",
-              "VPCSecurityGroups" : [ {"Ref": "DBSecurityGroup"}]
-            }
-          },
 
         "DBSecurityGroup":{
           "Type" : "AWS::EC2::SecurityGroup",
