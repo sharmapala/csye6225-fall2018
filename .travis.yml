@@ -1,9 +1,10 @@
 language: node_js #Specifying the server
 node_js: #All the versions supported
+- '6'
 - '7'
 - '7.6'
 - '8'
-services: #mariadb database 
+services: #mariadb database
 - mysql
 #before_install:
   #- mysql -u root --password="" < test/travis.sql
@@ -17,18 +18,18 @@ deploy:
   local_dir: webapp_upload #uploads the server folder of the code to S3
   skip_cleanup: true
   on: &2
-    repo: Phadated/csye6225-fall2018
-  bucket: cloudtestbucket12345
-  region: us-east-1
+    repo: $REPO_NAME
+  bucket: $S3_BUCKET
+  region: $S3_REGION
 - provider: codedeploy
   access_key_id: $AWS_ACCESS_KEY
   secret_access_key: $AWS_SECRET_KEY
-  bucket: cloudtestbucket12345
+  bucket: $S3_BUCKET
   key: webapp.zip
   bundle_type: zip
-  application: TestApp
-  deployment_group: cloudassignment
-  region: us-east-1
+  application: $APP_NAME
+  deployment_group: $DEPLOYMENT_GRP
+  region: $S3_REGION
   on: *2
 script:
   - zip -r webapp *
