@@ -15,8 +15,10 @@
     <img ng-src = "{{model.attachment.url}}" />
     <form action="/api/uploads/edit"   method="post" enctype="multipart/form-data">
         <input  name="myFile"    type="file" class="form-control" required="required"/>
-        <input  name="transactionId"  value="{{model.transactionId}}"   style="display: none"/> 
-        <input  name="attachmentId"  value="{{model.attachmentId}}"   style="display: none"/> 
+        <input  name="transactionId"  value="{{model.transactionId}}"   style="display: none"/>
+        <input  name="userName"  value="{{model.userName}}" style="display: none"/>
+        <input  name="attachmentId"  value="{{model.attachmentId}}"   style="display: none"/>
+
         <button type="submit" id="upload" class="btn btn-block btn-danger">Update Image</button>
     </form>
     <a class="btn btn-default btn-block btn-danger"

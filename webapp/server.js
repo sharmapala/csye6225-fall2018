@@ -6,6 +6,10 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session      = require('express-session');
 var passport = require('passport');
+var nodemailer = require('nodemailer');
+var crypto = require('crypto');
+var async = require('async');
+var flash = require('flash');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -15,6 +19,7 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 

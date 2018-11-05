@@ -29,8 +29,8 @@
             return $http.put(url, attachment);
         }
 
-        function deleteAttachment(attachmentId){
-            var url = "/api/attachment/" + attachmentId;
+        function deleteAttachment(attachmentId, userName){
+            var url = "/api/attachment/" + attachmentId + '/' + userName;
             return $http.delete(url);
         }
 

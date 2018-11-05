@@ -30,6 +30,11 @@
                     user: checkLogin
                 }
             })
+            .when("/resetpassword", {
+                templateUrl: "views/user/templates/resetpassword.view.client.html",
+                controller: "passController",
+                controllerAs: "model",
+            })
             .when("/transaction", {
                 templateUrl: "views/transaction/templates/transaction-list.view.client.html",
                 controller: "transactionListController",
