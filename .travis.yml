@@ -19,6 +19,7 @@ deploy:
   skip_cleanup: true
   on: &2
     repo: $REPO_NAME
+    branch: Assignment07-08
   bucket: $S3_BUCKET
   region: $S3_REGION 
 - provider: codedeploy
