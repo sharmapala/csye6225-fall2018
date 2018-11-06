@@ -142,12 +142,14 @@ function resetPassword(request, response, next) {
             // //     pass: process.env.SENDGRID_PASSWORD
             // //   }
             // }));
+            SnsArn = process.env.TARGET_ARN
             var mailOptions = {
             //   to: email,
             //   from: 'palaksharma1807@gmail.com',
             //   subject: 'Node.js Password Reset',
             //Message: contentSMS,  // here your sms
-            TargetArn: 'arn:aws:sns:us-east-1:673890306023:password_reset',
+            
+            TargetArn: SnsArn,
            // TargetArn: `arn:aws:sns:${process.env.region}:${process.env.accountId}:password_reset`,
            Message: email + ':' + token,
             // Message: email + ' : You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
