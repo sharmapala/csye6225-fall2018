@@ -1,0 +1,27 @@
+
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-text pull-left">
+                <a class="navbar-link" href="#!/transaction/{{model.transactionId}}/attachment">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </a>
+        </div>
+
+        <div class="navbar-header col-xs-8">
+            <a class="navbar-brand" href="#">New attachment</a>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <form action="/api/uploads"   method="post" enctype="multipart/form-data">
+        <input  name="myFile"    type="file" class="form-control" required="required"/>
+        <input  name="transactionId"  value="{{model.transactionId}}"   style="display: none"/> 
+        <input  name="userName"  value="{{model.userName}}" style="display: none"/>
+        <button type="submit" id="upload" class="btn btn-block btn-primary">Upload Image</button>
+    </form>
+
+    <a class="btn btn-default btn-block btn-danger"
+        href="#!/transaction/{{model.transactionId}}/attachment"
+        role="button">Cancel</a>
+</div>
+<div ng-include="'views/common/footer.view.client.html'"></div>
