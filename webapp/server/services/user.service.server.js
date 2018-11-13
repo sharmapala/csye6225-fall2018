@@ -142,7 +142,7 @@ function resetPassword(request, response, next) {
             // //     pass: process.env.SENDGRID_PASSWORD
             // //   }
             // }));
-            SnsArn = process.env.TARGET_ARN
+            Arn = process.env.TARGET_ARN
             var mailOptions = {
             //   to: email,
             //   from: 'palaksharma1807@gmail.com',
