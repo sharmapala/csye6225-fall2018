@@ -10,7 +10,7 @@ app.get("/api/transaction/:transactionId/attachment", getAttachment);
 app.get("/api/attachment/:attachmentId", findAttachmentById);
 // app.put("/api/attachment/:attachmentId", updateAttachment);
 
-var date = new Date();
+
 var bucketname = process.env.BUCKETNAME;
 var upload;
 var attachment_url;
@@ -75,13 +75,12 @@ function createAttachment(request, response) {
     attachment = {};
     
     if(node_env == 'dev'){
-    
     var s3 = new aws.S3();
-    attachment_url = 'https://s3.amazonaws.com/' + bucketname + '/' + userName + '/' + date.getMilliseconds() + '/';
+    attachment_url = 'https://s3.amazonaws.com/' + bucketname + '/' + userName + '/';
     attachment.url = attachment_url+originalname;
     var params = {
         Bucket: bucketname,
-        Key: userName+'/'+date.getMilliseconds()+'/' + originalname ,
+        Key: userName+'/'+originalname,
         Body: myFile.buffer,
         ACL: 'public-read-write'
     };
@@ -125,11 +124,11 @@ function updateAttachment(request, response) {
          var attach_length = attch_splitoutput.length;
          var last_attch_filename = attch_splitoutput[attach_length -1];
          console.log("yeh aya" + last_attch_filename);
-        attachment_url = 'https://s3.amazonaws.com/' + bucketname + '/' + userName + '/' + date.getMilliseconds()+ '/';
+        attachment_url = 'https://s3.amazonaws.com/' + bucketname + '/' + userName + '/';
         // attachment.url = attachment_url+originalname;
         var params = {
             Bucket: bucketname, 
-            Key: userName+'/'+ date.getMilliseconds()+'/'+ last_attch_filename
+            Key: userName+'/'+last_attch_filename
         };
         console.log(params.key);
         s3.deleteObject(params, function(err, data) {
@@ -197,7 +196,7 @@ function deleteAttachment(request, response) {
                           console.log("yeh aya" + last_attch_filename);
                          var params = {
                              Bucket: bucketname,
-                             Key: userName+'/'+ date.getMilliseconds()+'/'+last_attch_filename
+                             Key: userName+'/'+last_attch_filename
                              
                          };
                          console.log(params.Key);
