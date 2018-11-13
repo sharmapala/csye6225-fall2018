@@ -14,7 +14,7 @@ var flash = require('flash');
 var ses = require('nodemailer-ses-transport');
 
 // passport.use(new BasicStrategy(basicStrategy));
-passport.use(new LocalStrategy({passReqToCallback : true},localStrategy));
+passport.use(new LocalStrategy(localStrategy));
 
 app.get("/api/logout", logoutUser);
 app.post("/api/reset", resetPassword);
@@ -142,14 +142,14 @@ function resetPassword(request, response, next) {
             // //     pass: process.env.SENDGRID_PASSWORD
             // //   }
             // }));
-            Arn = process.env.TARGET_ARN
+            SnsArn = process.env.TARGET_ARN
             var mailOptions = {
             //   to: email,
             //   from: 'palaksharma1807@gmail.com',
             //   subject: 'Node.js Password Reset',
             //Message: contentSMS,  // here your sms
             
-            TargetArn: SnsArn,
+            TargetArn: 'arn:aws:sns:us-east-1:673890306023:password_reset',
            // TargetArn: `arn:aws:sns:${process.env.region}:${process.env.accountId}:password_reset`,
            Message: email + ':' + token,
             // Message: email + ' : You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +

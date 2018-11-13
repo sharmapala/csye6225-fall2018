@@ -30,7 +30,7 @@ app.use(express.static(__dirname + '/server'));
 
 require(__dirname +"/server/app");
 
-app.listen(process.env.PORT || 5050, '0.0.0.0');
+app.listen(process.env.PORT || 5000, '0.0.0.0');
 
 // db.users.sync();
 // db.attachments.sync();
