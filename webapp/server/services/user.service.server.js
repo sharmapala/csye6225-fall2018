@@ -12,6 +12,7 @@ var bcrypt = require('bcrypt');
 var email_validator = require("email-validator");
 var flash = require('flash');
 var ses = require('nodemailer-ses-transport');
+var ttl =20;
 
 // passport.use(new BasicStrategy(basicStrategy));
 passport.use(new LocalStrategy(localStrategy));
@@ -99,14 +100,14 @@ function checkLogin(request, response) {
 //     }
 // }
 
-function resetPassword(request, response, next) {
+function resetPassword(request, response) {
     var email = request.body.email;
     console.log("aa gya bhiya " + email );
     async.waterfall([
         function(done) {
           crypto.randomBytes(20, function(err, buf) {
             var token = buf.toString('hex');
-            done(err, token);
+            return done(err, token);
           });
         },
         function(token, done) {
@@ -121,48 +122,31 @@ function resetPassword(request, response, next) {
               user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
       
               user.save().then(function() {
-                done(null, token, user);
+                return done(null, token, user);
               });
             })
             .catch(function(err){
                 console.log(err);
             });
           },
+          
           function(token, user, done) {
             var sns = new aws.SNS({region: 'us-east-1'});
-            // var smtpTransport = nodemailer.createTransport(ses({
-            //     //transport: 'ses', // loads nodemailer-ses-transport
-            //     accessKeyId: process.env.AWSKEY,
-            //     secure: true,
-            //     port: 25,
-            //     secretAccessKey: process.env.AWSSECRETKEY
-            // //   service: 'SendGrid',
-            // //   auth: {
-            // //     user: process.env.SENDGRID_USER,
-            // //     pass: process.env.SENDGRID_PASSWORD
-            // //   }
-            // }));
-            //SnsArn = process.env.TARGET_ARN
             var mailOptions = {
-            //   to: email,
-            //   from: 'palaksharma1807@gmail.com',
-            //   subject: 'Node.js Password Reset',
-            //Message: contentSMS,  // here your sms
             
             TargetArn: 'arn:aws:sns:us-east-1:673890306023:password_reset',
+            
            // TargetArn: `arn:aws:sns:${process.env.region}:${process.env.accountId}:password_reset`,
-           Message: email + ':' + token,
-            // Message: email + ' : You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-            //   'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-            //   'http://' + request.headers.host + '/reset/' + token + '\n\n' +
-            //   'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+           Message: email + ':' + token + ':' + 20,
             };
             const snsResult = sns.publish(mailOptions,(err, data) => {
                 if (err) {
                    console.log("ERROR", err.stack);
-                }
+                   return done(err, '');
+                }else{
                 console.log('SNS ok: ' , JSON.stringify (data));
-              });
+                return done(null,data);
+              }});
             // smtpTransport.sendMail(mailOptions, function(err) {
             //   request.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
             //   done(err, 'done');
