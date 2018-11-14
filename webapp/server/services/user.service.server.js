@@ -6,7 +6,7 @@ var nodemailer = require('nodemailer');
 var aws = require('aws-sdk');
 aws.config.update({region:'us-east-1'});
 var userModel = require(process.cwd()+"/server/models/user/user.model.server");
-// var BasicStrategy = require('passport-http').BasicStrategy;
+//var BasicStrategy = require('passport-http').BasicStrategy;
 var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt');
 var email_validator = require("email-validator");
@@ -14,6 +14,7 @@ var flash = require('flash');
 var ses = require('nodemailer-ses-transport');
 var ttl =20;
 var winston = require('winston');
+resetPassword.counter = 0;
 
 const logger = winston.createLogger({
     level: 'info',
@@ -27,15 +28,20 @@ const logger = winston.createLogger({
       new winston.transports.File({ filename: 'combined.log' })
     ]
   });
+  var cw = new aws.CloudWatch({apiVersion: '2010-08-01'});
 
-// passport.use(new BasicStrategy(basicStrategy));
+  
+
+ 
+//passport.use(new BasicStrategy(basicStrategy));
 passport.use(new LocalStrategy(localStrategy));
 
 app.get("/api/logout", logoutUser);
 app.post("/api/reset", resetPassword);
 app.post("/user/register", registerUser);
 app.get("/api/user", findUserByUserName);
-// app.get("/time/",passport.authenticate('basic', { session: false }), getTime);
+//app.get("/time/",passport.authenticate('basic', { session: false }), getTime);
+app.get("/time/",getTime);
 app.post("/api/login",passport.authenticate('local'), login);
 app.get("/api/checkLogin", checkLogin);
 
@@ -104,17 +110,42 @@ function checkLogin(request, response) {
     response.send(request.isAuthenticated() ? request.user : "0");
 }
 
-// function getTime(request, response){
-//     if(request.isAuthenticated()){
-//    var time =  userModel.getTime();
-//             response.json(time);
-//     }
-//     else{
-//         response.json("User not logged in");
-//     }
-// }
+function getTime(request, response){
+    if(request.isAuthenticated()){
+   var time =  userModel.getTime();
+            response.json(time);
+    }
+    else{
+        response.json("User not logged in");
+    }
+}
 
 function resetPassword(request, response) {
+    resetPassword.counter++;
+    console.log(resetPassword.counter);
+    var params = {
+        MetricData: [
+          {
+            MetricName: 'api - /api/reset',
+            Dimensions: [
+              {
+                Name: 'api',
+                Value: 'counter'
+              },
+            ],
+            Unit: 'None',
+            Value: resetPassword.counter
+          },
+        ],
+        Namespace: 'SITE/TRAFFIC'
+      };
+    cw.putMetricData(params, function(err, data) {
+        if (err) {
+          logger.info("Error", err);
+        } else {
+          logger.info("Success", JSON.stringify(data));
+        }
+      });
     var email = request.body.email;
     console.log("aa gya bhiya " + email );
     async.waterfall([
