@@ -1,4 +1,18 @@
 // var q = require('q');
+var winston = require('winston');
+
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.json(),
+    transports: [
+      //
+      // - Write to all logs with level `info` and below to `combined.log` 
+      // - Write all logs error (and below) to `error.log`.
+      //
+      new winston.transports.File({ filename: 'error.log', level: 'error' }),
+      new winston.transports.File({ filename: 'combined.log' })
+    ]
+  });
 const db = {}
 const Sequelize = require('sequelize');
 //var connectionString = 'mysql://127.0.0.1:3306/registeredMembers';
@@ -24,7 +38,7 @@ sequelize = new Sequelize('registeredMembers', 'root', '', {
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
-console.log(sequelize);
+logger.info(sequelize);
 
 db.users = require(__dirname+"/user/user.schema.server")(sequelize, Sequelize);
 db.transactions = require(__dirname+"/transaction/transaction.schema.server")(sequelize, Sequelize);

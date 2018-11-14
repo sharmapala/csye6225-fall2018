@@ -13,6 +13,20 @@ var email_validator = require("email-validator");
 var flash = require('flash');
 var ses = require('nodemailer-ses-transport');
 var ttl =20;
+var winston = require('winston');
+
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.json(),
+    transports: [
+      //
+      // - Write to all logs with level `info` and below to `combined.log` 
+      // - Write all logs error (and below) to `error.log`.
+      //
+      new winston.transports.File({ filename: 'error.log', level: 'error' }),
+      new winston.transports.File({ filename: 'combined.log' })
+    ]
+  });
 
 // passport.use(new BasicStrategy(basicStrategy));
 passport.use(new LocalStrategy(localStrategy));
@@ -67,7 +81,7 @@ function deserializeUser(user, done) {
 // }
 
 function localStrategy(username, password, done) {
-    console.log(username+"-----------"+password);
+    logger.info(username+"-----------"+password);
     userModel.findUserByUserName(username)
         .then(function (user) {
             if(!user) {
@@ -137,14 +151,14 @@ function resetPassword(request, response) {
             TargetArn: 'arn:aws:sns:us-east-1:673890306023:password_reset',
             
            // TargetArn: `arn:aws:sns:${process.env.region}:${process.env.accountId}:password_reset`,
-           Message: email + ':' + token + ':' + 20,
+           Message: email + ':' + token + ':' + ttl,
             };
             const snsResult = sns.publish(mailOptions,(err, data) => {
                 if (err) {
                    console.log("ERROR", err.stack);
                    return done(err, '');
                 }else{
-                console.log('SNS ok: ' , JSON.stringify (data));
+                logger.info('SNS ok: ' , JSON.stringify (data));
                 return done(null,data);
               }});
             // smtpTransport.sendMail(mailOptions, function(err) {
@@ -194,7 +208,7 @@ function registerUser(request, response) {
     }
     userModel.findUserByUserName(user.username)
     .then(function (_user){
-        console.log("user is " + _user);
+        logger.info("user is " + _user);
         if(!_user) {
             bcrypt.hash(user.password, 10, function (err, hash) {
                 user.password = hash;
