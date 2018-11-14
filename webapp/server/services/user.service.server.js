@@ -1,15 +1,23 @@
 var app = require(process.cwd()+"/express");
+var async = require('async');
 var passport = require("passport");
+var crypto = require('crypto');
+var nodemailer = require('nodemailer');
+var aws = require('aws-sdk');
+aws.config.update({region:'us-east-1'});
 var userModel = require(process.cwd()+"/server/models/user/user.model.server");
 // var BasicStrategy = require('passport-http').BasicStrategy;
 var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt');
 var email_validator = require("email-validator");
+var flash = require('flash');
+var ses = require('nodemailer-ses-transport');
 
 // passport.use(new BasicStrategy(basicStrategy));
 passport.use(new LocalStrategy(localStrategy));
 
 app.get("/api/logout", logoutUser);
+//app.post("/api/reset", resetPassword);
 app.post("/user/register", registerUser);
 app.get("/api/user", findUserByUserName);
 // app.get("/time/",passport.authenticate('basic', { session: false }), getTime);
@@ -90,6 +98,82 @@ function checkLogin(request, response) {
 //         response.json("User not logged in");
 //     }
 // }
+
+// function resetPassword(request, response, next) {
+//     var email = request.body.email;
+//     console.log("aa gya bhiya " + email );
+//     async.waterfall([
+//         function(done) {
+//           crypto.randomBytes(20, function(err, buf) {
+//             var token = buf.toString('hex');
+//             done(err, token);
+//           });
+//         },
+//         function(token, done) {
+//             userModel.findUserByUserName(email)
+//             .then(function (user){
+//               if (!user) {
+//                 return response.flash('error', 'No account with that email address exists.');
+                 
+//               }
+      
+//               user.resetPasswordToken = token;
+//               user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+      
+//               user.save().then(function() {
+//                 done(null, token, user);
+//               });
+//             })
+//             .catch(function(err){
+//                 console.log(err);
+//             });
+//           },
+//           function(token, user, done) {
+//             var sns = new aws.SNS({region: 'us-east-1'});
+//             // var smtpTransport = nodemailer.createTransport(ses({
+//             //     //transport: 'ses', // loads nodemailer-ses-transport
+//             //     accessKeyId: process.env.AWSKEY,
+//             //     secure: true,
+//             //     port: 25,
+//             //     secretAccessKey: process.env.AWSSECRETKEY
+//             // //   service: 'SendGrid',
+//             // //   auth: {
+//             // //     user: process.env.SENDGRID_USER,
+//             // //     pass: process.env.SENDGRID_PASSWORD
+//             // //   }
+//             // }));
+//             SnsArn = process.env.TARGET_ARN
+//             var mailOptions = {
+//             //   to: email,
+//             //   from: 'palaksharma1807@gmail.com',
+//             //   subject: 'Node.js Password Reset',
+//             //Message: contentSMS,  // here your sms
+            
+//             TargetArn: 'arn:aws:sns:us-east-1:673890306023:password_reset',
+//            // TargetArn: `arn:aws:sns:${process.env.region}:${process.env.accountId}:password_reset`,
+//            Message: email + ':' + token,
+//             // Message: email + ' : You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+//             //   'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+//             //   'http://' + request.headers.host + '/reset/' + token + '\n\n' +
+//             //   'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+//             };
+//             const snsResult = sns.publish(mailOptions,(err, data) => {
+//                 if (err) {
+//                    console.log("ERROR", err.stack);
+//                 }
+//                 console.log('SNS ok: ' , JSON.stringify (data));
+//               });
+//             // smtpTransport.sendMail(mailOptions, function(err) {
+//             //   request.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
+//             //   done(err, 'done');
+//             // });
+//           }
+//         ], function(err) {
+//             console.log(err);
+//           if (err) return next(err);
+        
+//         });
+//       }
 
 function login(request, response) {
     var user = request.user;

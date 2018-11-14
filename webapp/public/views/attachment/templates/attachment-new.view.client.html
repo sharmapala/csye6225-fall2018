@@ -16,6 +16,7 @@
     <form action="/api/uploads"   method="post" enctype="multipart/form-data">
         <input  name="myFile"    type="file" class="form-control" required="required"/>
         <input  name="transactionId"  value="{{model.transactionId}}"   style="display: none"/> 
+        <input  name="userName"  value="{{model.userName}}" style="display: none"/>
         <button type="submit" id="upload" class="btn btn-block btn-primary">Upload Image</button>
     </form>
 

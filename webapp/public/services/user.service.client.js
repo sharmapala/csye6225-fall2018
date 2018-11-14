@@ -10,7 +10,8 @@
             "registerUser": registerUser,
             "findUserByUsername": findUserByUsername,
             "checkLogin": checkLogin,
-            "logoutUser": logoutUser
+            "logoutUser": logoutUser,
+            "resetPassword": resetPassword
         };
 
         return _api;
@@ -58,7 +59,16 @@
                     return null;
                 });
         }
-
+        
+        function resetPassword(email){
+            var url = "/api/reset";
+            return $http.post(url, {email: email})
+                .then(function(response){
+                    return response.data;
+                }, function (err) {
+                    return null;
+                });
+        }
 
         function logoutUser(){
             var url = "/api/logout";
