@@ -94,6 +94,16 @@
 
         },
 
+        "SSHLocation": {
+            "Description": " The IP address range that can be used to access the web server using SSH.",
+            "Type": "String",
+            "MinLength": "9",
+            "MaxLength": "18",
+            "Default": "0.0.0.0/0",
+            "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+            "ConstraintDescription": "must be a valid IP CIDR range of the form x.x.x.x/x."
+          },
+
         "StackName":{
             "Type":"String"
 
@@ -360,6 +370,83 @@
                 ]
             }
         },
+
+        "WebServerSecurityGroup":{
+            "Type" : "AWS::EC2::SecurityGroup",
+            "Properties":{
+                "GroupDescription" : "Allow access from HTTP and SSH traffic",
+                "GroupName": "csye6225-webapp",
+                "VpcId": {
+                    "Ref": "VPC"
+                  },
+                  "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "csye6225-webapp"
+    
+                    }
+                ],
+                "SecurityGroupIngress": [
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": "80",
+                    "ToPort": "80",
+                    "CidrIp": "0.0.0.0/0"
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": "80",
+                    "ToPort": "80",
+                    "CidrIpv6": "::/0"
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": "443",
+                    "ToPort": "443",
+                    "CidrIp": "0.0.0.0/0"
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": "443",
+                    "ToPort": "443",
+                    "CidrIpv6": "::/0"
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": "5050",
+                    "ToPort": "5050",
+                    "CidrIp": "0.0.0.0/0"
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": "5050",
+                    "ToPort": "5050",
+                    "CidrIpv6": "::/0"
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": "22",
+                    "ToPort": "22",
+                    "CidrIp": {
+                    "Ref": "SSHLocation"
+                    }
+                }
+                ]
+            }
+
+        },
+
+        "VPCSNSendpoint":{
+            "Type" : "AWS::EC2::VPCEndpoint",
+            "Properties" : {
+              "VpcId" :{"Ref": "VPC" },
+              "ServiceName" : { "Fn::Join": [ "", [ "com.amazonaws.", { "Ref": "AWS::Region" }, ".sns" ] ] },
+              "PrivateDnsEnabled": "True",
+              "VpcEndpointType" : "Interface",
+              "SubnetIds" : [ {"Ref": "PrivateSubnet3"}, {"Ref": "PublicSubnet2"}, {"Ref": "PrivateSubnet1"} ],
+              "SecurityGroupIds" : [ {"Ref": "WebServerSecurityGroup"}]
+            }
+          },
         
         "AttachGateway": {
             "Type": "AWS::EC2::VPCGatewayAttachment",
@@ -373,6 +460,8 @@
                 }
             }
         },
+
+
         
         "PublicRouteTable": {
             "Type": "AWS::EC2::RouteTable",
