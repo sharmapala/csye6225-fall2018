@@ -11,7 +11,6 @@ var crypto = require('crypto');
 var async = require('async');
 var flash = require('flash');
 var winston = require('winston');
-
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.json(),
@@ -38,7 +37,8 @@ app.use(session({
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
-
+var expressStatsd = require('express-statsd');
+app.use(expressStatsd());
 app.set('view engine', 'ejs');
 
 app.use(express.static(__dirname + '/public'));

@@ -12,8 +12,10 @@ var bcrypt = require('bcrypt');
 var email_validator = require("email-validator");
 var flash = require('flash');
 var ses = require('nodemailer-ses-transport');
-var ttl =20;
+var ttl = 1200;
 var winston = require('winston');
+var SDC = require('statsd-client'),
+sdc = new SDC({host: 'localhost', port: 8125});
 resetPassword.counter = 0;
 getTime.counter = 0;
 login.counter = 0;
@@ -41,8 +43,16 @@ const logger = winston.createLogger({
 //passport.use(new BasicStrategy(basicStrategy));
 passport.use(new LocalStrategy(localStrategy));
 
+function statsd (path) {
+  return function (req, res, next) {
+    var method = req.method || 'unknown_method';
+    req.statsdKey = ['http', method.toLowerCase(), path].join('.');
+    next();
+  };
+}
+  
 app.get("/api/logout", logoutUser);
-app.post("/api/reset", resetPassword);
+app.post("/api/reset", statsd('reset'), resetPassword);
 app.post("/user/register", registerUser);
 app.get("/api/user", findUserByUserName);
 //app.get("/time/",passport.authenticate('basic', { session: false }), getTime);
@@ -151,6 +161,7 @@ function getTime(request, response){
 }
 
 function resetPassword(request, response) {
+    sdc.increment('reset.counter');
     resetPassword.counter++;
     console.log(resetPassword.counter);
     var params = {
@@ -209,7 +220,7 @@ function resetPassword(request, response) {
             var sns = new aws.SNS({region: 'us-east-1'});
             var mailOptions = {
             
-            TargetArn: targetarn_sns,
+            TargetArn: 'arn:aws:sns:us-east-1:673890306023:password_reset',
             
            // TargetArn: `arn:aws:sns:${process.env.region}:${process.env.accountId}:password_reset`,
            Message: email + ':' + token + ':' + ttl,
