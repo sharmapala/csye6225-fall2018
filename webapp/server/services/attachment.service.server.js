@@ -16,7 +16,6 @@ findAttachmentById.counter = 0;
 updateAttachment.counter = 0;
 deleteAttachment.counter = 0;
 
-
 var bucketname = process.env.BUCKETNAME;
 var upload;
 var attachment_url;
@@ -228,6 +227,7 @@ function updateAttachment(request, response) {
 
 app.delete("/api/attachment/:attachmentId/:userName",deleteAttachment);
 function deleteAttachment(request, response) {
+
     deleteAttachment.counter++;
     console.log(deleteAttachment.counter);
     var params = {
@@ -253,6 +253,7 @@ function deleteAttachment(request, response) {
           logger.info("Success", JSON.stringify(data));
         }
       });
+
     console.log(request);
     var attachmentId = request.params.attachmentId;
    // var myFile        = request.file;
