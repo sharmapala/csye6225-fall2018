@@ -15,11 +15,11 @@ var ses = require('nodemailer-ses-transport');
 var ttl =20;
 var winston = require('winston');
 resetPassword.counter = 0;
-time.counter = 0;
+getTime.counter = 0;
 login.counter = 0;
-register.counter = 0;
-logout.counter = 0;
-user.counter = 0;
+registerUser.counter = 0;
+logoutUser.counter = 0;
+findUserByUserName.counter = 0;
 var targetarn_sns = process.env.TARGETARN;
 const logger = winston.createLogger({
     level: 'info',
@@ -116,8 +116,8 @@ function checkLogin(request, response) {
 }
 
 function getTime(request, response){
-    time.counter++;
-    console.log(time.counter);
+  getTime.counter++;
+    console.log(getTime.counter);
     var params = {
         MetricData: [
           {
@@ -129,7 +129,7 @@ function getTime(request, response){
               },
             ],
             Unit: 'None',
-            Value: time.counter
+            Value: getTime.counter
           },
         ],
         Namespace: 'TimeApi/traffic'
@@ -271,8 +271,8 @@ function login(request, response) {
 }
 
 function findUserByUserName(request, response) {
-    user.counter++;
-    console.log(user.counter);
+  findUserByUserName.counter++;
+    console.log(findUserByUserName.counter);
     var params = {
         MetricData: [
           {
@@ -284,7 +284,7 @@ function findUserByUserName(request, response) {
               },
             ],
             Unit: 'None',
-            Value: user.counter
+            Value: findUserByUserName.counter
           },
         ],
         Namespace: 'UserApi/traffic'
@@ -307,8 +307,8 @@ function findUserByUserName(request, response) {
 }
 
 function logoutUser(request, response){
-    logout.counter++;
-    console.log(logout.counter);
+  logoutUser.counter++;
+    console.log(logoutUser.counter);
     var params = {
         MetricData: [
           {
@@ -320,7 +320,7 @@ function logoutUser(request, response){
               },
             ],
             Unit: 'None',
-            Value: logout.counter
+            Value: logoutUser.counter
           },
         ],
         Namespace: 'LogoutApi/traffic'
@@ -340,8 +340,8 @@ function logoutUser(request, response){
 
 function registerUser(request, response) {
     
-    register.counter++;
-    console.log(register.counter);
+  registerUser.counter++;
+    console.log(registerUser.counter);
     var params = {
         MetricData: [
           {
@@ -353,7 +353,7 @@ function registerUser(request, response) {
               },
             ],
             Unit: 'None',
-            Value: register.counter
+            Value: registerUser.counter
           },
         ],
         Namespace: 'RegisterApi/Traffic'
