@@ -10,6 +10,12 @@ app.get("/api/transaction/:transactionId/attachment", getAttachment);
 app.get("/api/attachment/:attachmentId", findAttachmentById);
 // app.put("/api/attachment/:attachmentId", updateAttachment);
 
+createAttachment.counter = 0;
+getAttachment.counter = 0;
+findAttachmentById.counter = 0;
+updateAttachment.counter = 0;
+deleteAttachment.counter = 0;
+
 
 var bucketname = process.env.BUCKETNAME;
 var upload;
@@ -62,6 +68,31 @@ app.post ("/api/uploads/edit", upload.array('myFile'), updateAttachment);
 
 
 function createAttachment(request, response) {
+    createAttachment.counter++;
+    console.log(createAttachment.counter);
+    var params = {
+        MetricData: [
+          {
+            MetricName: 'api -  /api/uploads',
+            Dimensions: [
+              {
+                Name: 'api',
+                Value: 'counter'
+              },
+            ],
+            Unit: 'None',
+            Value: createAttachment.counter
+          },
+        ],
+        Namespace: 'createAttachment/traffic'
+      };
+    cw.putMetricData(params, function(err, data) {
+        if (err) {
+          logger.info("Error", err);
+        } else {
+          logger.info("Success", JSON.stringify(data));
+        }
+      });
     var myFile        = request.files[0];
     var transactionId = request.body.transactionId;
     var userName = request.body.userName;
@@ -103,6 +134,31 @@ function createAttachment(request, response) {
 }
 
 function updateAttachment(request, response) {
+    updateAttachment.counter++;
+    console.log(updateAttachment.counter);
+    var params = {
+        MetricData: [
+          {
+            MetricName: 'api -  /api/uploads/edit',
+            Dimensions: [
+              {
+                Name: 'api',
+                Value: 'counter'
+              },
+            ],
+            Unit: 'None',
+            Value: updateAttachment.counter
+          },
+        ],
+        Namespace: 'updateAttachment/traffic'
+      };
+    cw.putMetricData(params, function(err, data) {
+        if (err) {
+          logger.info("Error", err);
+        } else {
+          logger.info("Success", JSON.stringify(data));
+        }
+      });
     var myFile        = request.files[0];
     var transactionId = request.body.transactionId;
     var attachmentId = request.body.attachmentId;
@@ -172,6 +228,31 @@ function updateAttachment(request, response) {
 
 app.delete("/api/attachment/:attachmentId/:userName",deleteAttachment);
 function deleteAttachment(request, response) {
+    deleteAttachment.counter++;
+    console.log(deleteAttachment.counter);
+    var params = {
+        MetricData: [
+          {
+            MetricName: 'api -  /api/attachment/:attachmentId/:userName',
+            Dimensions: [
+              {
+                Name: 'api',
+                Value: 'counter'
+              },
+            ],
+            Unit: 'None',
+            Value: deleteAttachment.counter
+          },
+        ],
+        Namespace: 'deleteAttachment/traffic'
+      };
+    cw.putMetricData(params, function(err, data) {
+        if (err) {
+          logger.info("Error", err);
+        } else {
+          logger.info("Success", JSON.stringify(data));
+        }
+      });
     console.log(request);
     var attachmentId = request.params.attachmentId;
    // var myFile        = request.file;
@@ -230,6 +311,32 @@ function deleteAttachment(request, response) {
 // }
 
 function findAttachmentById(request, response) {
+
+    findAttachmentById.counter++;
+    console.log(findAttachmentById.counter);
+    var params = {
+        MetricData: [
+          {
+            MetricName: 'api -  /api/attachment/:attachmentId',
+            Dimensions: [
+              {
+                Name: 'api',
+                Value: 'counter'
+              },
+            ],
+            Unit: 'None',
+            Value: findAttachmentById.counter
+          },
+        ],
+        Namespace: 'findAttachmentById/traffic'
+      };
+    cw.putMetricData(params, function(err, data) {
+        if (err) {
+          logger.info("Error", err);
+        } else {
+          logger.info("Success", JSON.stringify(data));
+        }
+      });
     var attachmentId = request.params.attachmentId;
     attachmentModel.findAttachmentById(attachmentId)
         .then(function (attachment) {
@@ -240,6 +347,31 @@ function findAttachmentById(request, response) {
 }
 
 function getAttachment(request, response){
+    getAttachment.counter++;
+    console.log(getAttachment.counter);
+    var params = {
+        MetricData: [
+          {
+            MetricName: 'api -  /api/transaction/:transactionId/attachment',
+            Dimensions: [
+              {
+                Name: 'api',
+                Value: 'counter'
+              },
+            ],
+            Unit: 'None',
+            Value: getAttachment.counter
+          },
+        ],
+        Namespace: 'getAttachment/traffic'
+      };
+    cw.putMetricData(params, function(err, data) {
+        if (err) {
+          logger.info("Error", err);
+        } else {
+          logger.info("Success", JSON.stringify(data));
+        }
+      });
     var transactionId = request.params.transactionId;
     attachmentModel.getAttachment(transactionId)
         .then(function (attachments) {
