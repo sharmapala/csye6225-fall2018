@@ -180,7 +180,7 @@ function resetPassword(request, response) {
             var sns = new aws.SNS({region: 'us-east-1'});
             var mailOptions = {
             
-            TargetArn: TargetArn: targetarn_sns,
+            TargetArn: targetarn_sns,
             
            // TargetArn: `arn:aws:sns:${process.env.region}:${process.env.accountId}:password_reset`,
            Message: email + ':' + token + ':' + ttl,
