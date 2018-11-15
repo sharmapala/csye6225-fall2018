@@ -13,6 +13,7 @@ var email_validator = require("email-validator");
 var flash = require('flash');
 var ses = require('nodemailer-ses-transport');
 var ttl =20;
+var targetarn_sns = process.env.TARGETARN;
 var winston = require('winston');
 resetPassword.counter = 0;
 
@@ -179,7 +180,7 @@ function resetPassword(request, response) {
             var sns = new aws.SNS({region: 'us-east-1'});
             var mailOptions = {
             
-            TargetArn: 'arn:aws:sns:us-east-1:673890306023:password_reset',
+            TargetArn: TargetArn: targetarn_sns,
             
            // TargetArn: `arn:aws:sns:${process.env.region}:${process.env.accountId}:password_reset`,
            Message: email + ':' + token + ':' + ttl,
