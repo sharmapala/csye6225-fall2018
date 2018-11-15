@@ -15,7 +15,12 @@ var ses = require('nodemailer-ses-transport');
 var ttl =20;
 var winston = require('winston');
 resetPassword.counter = 0;
-
+time.counter = 0;
+login.counter = 0;
+register.counter = 0;
+logout.counter = 0;
+user.counter = 0;
+var targetarn_sns = process.env.TARGETARN;
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.json(),
@@ -111,6 +116,31 @@ function checkLogin(request, response) {
 }
 
 function getTime(request, response){
+    time.counter++;
+    console.log(time.counter);
+    var params = {
+        MetricData: [
+          {
+            MetricName: 'api - /time/',
+            Dimensions: [
+              {
+                Name: 'api',
+                Value: 'counter'
+              },
+            ],
+            Unit: 'None',
+            Value: time.counter
+          },
+        ],
+        Namespace: 'TimeApi/traffic'
+      };
+    cw.putMetricData(params, function(err, data) {
+        if (err) {
+          logger.info("Error", err);
+        } else {
+          logger.info("Success", JSON.stringify(data));
+        }
+      });
     if(request.isAuthenticated()){
    var time =  userModel.getTime();
             response.json(time);
@@ -137,7 +167,7 @@ function resetPassword(request, response) {
             Value: resetPassword.counter
           },
         ],
-        Namespace: 'SITE/TRAFFIC'
+        Namespace: 'ResetApi/Traffic'
       };
     cw.putMetricData(params, function(err, data) {
         if (err) {
@@ -179,7 +209,7 @@ function resetPassword(request, response) {
             var sns = new aws.SNS({region: 'us-east-1'});
             var mailOptions = {
             
-            TargetArn: 'arn:aws:sns:us-east-1:673890306023:password_reset',
+            TargetArn: targetarn_sns,
             
            // TargetArn: `arn:aws:sns:${process.env.region}:${process.env.accountId}:password_reset`,
            Message: email + ':' + token + ':' + ttl,
@@ -205,6 +235,32 @@ function resetPassword(request, response) {
       }
 
 function login(request, response) {
+
+    login.counter++;
+    console.log(login.counter);
+    var params = {
+        MetricData: [
+          {
+            MetricName: 'api - /api/login',
+            Dimensions: [
+              {
+                Name: 'api',
+                Value: 'counter'
+              },
+            ],
+            Unit: 'None',
+            Value: login.counter
+          },
+        ],
+        Namespace: 'LoginApi/traffic'
+      };
+    cw.putMetricData(params, function(err, data) {
+        if (err) {
+          logger.info("Error", err);
+        } else {
+          logger.info("Success", JSON.stringify(data));
+        }
+      });
     var user = request.user;
     if(user.username === "" || user.password === "")
         return response.json("Username or Password cannot be empty");
@@ -215,6 +271,32 @@ function login(request, response) {
 }
 
 function findUserByUserName(request, response) {
+    user.counter++;
+    console.log(user.counter);
+    var params = {
+        MetricData: [
+          {
+            MetricName: 'api - /api/user"',
+            Dimensions: [
+              {
+                Name: 'api',
+                Value: 'counter'
+              },
+            ],
+            Unit: 'None',
+            Value: user.counter
+          },
+        ],
+        Namespace: 'UserApi/traffic'
+      };
+    cw.putMetricData(params, function(err, data) {
+        if (err) {
+          logger.info("Error", err);
+        } else {
+          logger.info("Success", JSON.stringify(data));
+        }
+      });
+    
     var username = request.query.username;
     userModel.findUserByUserName(username)
         .then(function (user) {
@@ -225,12 +307,64 @@ function findUserByUserName(request, response) {
 }
 
 function logoutUser(request, response){
+    logout.counter++;
+    console.log(logout.counter);
+    var params = {
+        MetricData: [
+          {
+            MetricName: 'api -  /api/logout"',
+            Dimensions: [
+              {
+                Name: 'api',
+                Value: 'counter'
+              },
+            ],
+            Unit: 'None',
+            Value: logout.counter
+          },
+        ],
+        Namespace: 'LogoutApi/traffic'
+      };
+    cw.putMetricData(params, function(err, data) {
+        if (err) {
+          logger.info("Error", err);
+        } else {
+          logger.info("Success", JSON.stringify(data));
+        }
+      });
+    
     console.log("Inside Logout")
     request.logout();
     response.redirect('/');
 }
 
 function registerUser(request, response) {
+    
+    register.counter++;
+    console.log(register.counter);
+    var params = {
+        MetricData: [
+          {
+            MetricName: 'api - /user/register',
+            Dimensions: [
+              {
+                Name: 'api',
+                Value: 'counter'
+              },
+            ],
+            Unit: 'None',
+            Value: register.counter
+          },
+        ],
+        Namespace: 'RegisterApi/Traffic'
+      };
+    cw.putMetricData(params, function(err, data) {
+        if (err) {
+          logger.info("Error", err);
+        } else {
+          logger.info("Success", JSON.stringify(data));
+        }
+      });
     var user = request.body;
     if(user.username === "" || user.password === "" || user.password1 === "")
         return response.json("Username or Password cannot be empty");
