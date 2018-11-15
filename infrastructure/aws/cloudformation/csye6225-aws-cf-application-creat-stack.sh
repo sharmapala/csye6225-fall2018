@@ -82,6 +82,10 @@ echo -e "\n"
 echo "Please enter WEbserver Instance profile name."
 read webserver_instanceprofile
 
+echo -e "\n"
+echo "Please enter websecurity group id."
+read webserver_securitygroup
+
 #Functions
 #-------------------------------------------------------------------------------
 # Retrieve the status of a cfn stack
@@ -150,7 +154,7 @@ file_dir_var="file://$dir_var/csye6225-cf-application.json"
 aws cloudformation create-stack \
 	--stack-name $Stack_Name  \
 	--template-body $file_dir_var \
-	--parameters  ParameterKey="VPC",ParameterValue=$vpc_id ParameterKey="SubnetIdwebserver",ParameterValue=$PUBLIC_SUBNET_CHOSEN ParameterKey="KeyName",ParameterValue=$KEY_CHOSEN ParameterKey="SSHLocation",ParameterValue="0.0.0.0/0" ParameterKey="S3bucketname",ParameterValue=$S3_Bucket ParameterKey="DBsubnetgroup",ParameterValue=$DBSubnet_Group ParameterKey="WebserverInstanceProfile",ParameterValue=$webserver_instanceprofile \
+		--parameters  ParameterKey="VPC",ParameterValue=$vpc_id ParameterKey="SubnetIdwebserver",ParameterValue=$PUBLIC_SUBNET_CHOSEN ParameterKey="KeyName",ParameterValue=$KEY_CHOSEN ParameterKey="S3bucketname",ParameterValue=$S3_Bucket ParameterKey="DBsubnetgroup",ParameterValue=$DBSubnet_Group ParameterKey="WebserverInstanceProfile",ParameterValue=$webserver_instanceprofile ParameterKey="WebServerSecurityGroup",ParameterValue=$webserver_securitygroup \
 	--disable-rollback
 
 # aws cloudformation create-stack \
