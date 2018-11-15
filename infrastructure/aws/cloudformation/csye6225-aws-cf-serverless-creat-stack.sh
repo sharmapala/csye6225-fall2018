@@ -25,66 +25,18 @@ aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE||CREATE_IN_
 echo "Enter the stack you want to create"
 read Stack_Name
 
-# Dhanisha, Here I'm ASSUMING that $1 is the STACK NAME
-# $vpc would be the actual name of the VPC created.
-# Retrieving VPC Name
-
-
-# PART 1 - FINDING VPC NAME AND VPC ID
-# echo -e "\n"
-# echo "**RETRIEVE VPC NAME**"
-# vpc="$1-csye6225-vpc-1"
-# vpcname=$(aws ec2 describe-vpcs \
-# 	--query "Vpcs[?Tags[?Key=='Name']|[?Value=='$vpc']].Tags[0].Value" \
-# 	--output text)
-# echo $vpcname
-
-# Retrieving VPC ID
-echo -e "\n"
-echo "**SHOW VPC ID**"
-aws ec2 describe-vpcs
-
-echo "These are the VPC IDs you have!"
-echo "Which one do you want!"
-read vpc_id
-echo "VPC ID is '$vpc_id'"
-
-# PART 2 - FINDING SUBNETS
-echo -e "\n"
-echo "**SHOW SUBNETS**"
-aws ec2 describe-subnets
-
-echo "These are the Subnets you have!"
-echo "Which one do you want!"
-read PUBLIC_SUBNET_CHOSEN
-echo "You chose '$PUBLIC_SUBNET_CHOSEN'."
-
-# PART 4 - VPC NAME, VPC ID and PUBLIC SUBNET DISPLAY
-echo -e "\n"
-echo "VPC Name is '$vpcname', VPC ID is '$vpc_id' and the public subnet you chose is '$PUBLIC_SUBNET_CHOSEN'."
-
-
-echo "Displaying all keys!"
-aws ec2 describe-key-pairs
-echo -e "\n"
-echo "Choose 1 Key which you want to use!"
-read KEY_CHOSEN
 
 echo -e "\n"
-echo "Enter S3 Bucket Name ie your domain Name, csye6225-fall2018-huskyid.me"
+echo "Enter S3 Bucket Name , code-deploy.csye6225-fall2018-huskyid.me"
 read S3_Bucket
 
 echo -e "\n"
-echo "Please enter DBSubnet Group Name."
-read DBSubnet_Group
+echo "Enter the source email address"
+read Source_emailaddr
 
 echo -e "\n"
-echo "Please enter WEbserver Instance profile name."
-read webserver_instanceprofile
-
-echo -e "\n"
-echo "Please enter websecurity group id."
-read webserver_securitygroup
+echo "Enter the lambda execution role"
+read lambdarole
 
 #Functions
 #-------------------------------------------------------------------------------
@@ -149,12 +101,20 @@ dir_var=$(pwd)
 # echo "Current Directory is '$dir_var'"
 file_dir_var="file://$dir_var/csye6225-cf-application.json"
 
+
+
+#creating s3 bucket 
+aws s3api create-bucket --bucket $S3_Bucket --region us-east-1
+
+#uploading files to s3
+aws s3 cp index.js.zip s3://$S3_Bucket/index.js.zip
+
 #Create Stack
 
 aws cloudformation create-stack \
 	--stack-name $Stack_Name  \
 	--template-body $file_dir_var \
-		--parameters  ParameterKey="VPC",ParameterValue=$vpc_id ParameterKey="SubnetIdwebserver",ParameterValue=$PUBLIC_SUBNET_CHOSEN ParameterKey="KeyName",ParameterValue=$KEY_CHOSEN ParameterKey="S3bucketname",ParameterValue=$S3_Bucket ParameterKey="DBsubnetgroup",ParameterValue=$DBSubnet_Group ParameterKey="WebserverInstanceProfile",ParameterValue=$webserver_instanceprofile ParameterKey="WebServerSecurityGroup",ParameterValue=$webserver_securitygroup \
+		--parameters  ParameterKey="LambdaRole",ParameterValue=$lambdarole ParameterKey="emailaddress",ParameterValue=$Source_emailaddr ParameterKey="S3bucketname",ParameterValue=$S3_Bucket \
 	--disable-rollback
 
 # aws cloudformation create-stack \

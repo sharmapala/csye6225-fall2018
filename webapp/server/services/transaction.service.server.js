@@ -7,7 +7,38 @@ app.get("/api/transaction/:transactionId", findTransactionById);
 app.put("/api/transaction/:transactionId", updateTransaction);
 app.delete("/api/transaction/:transactionId", deleteTransaction);
 
+createTransaction.counter = 0;
+getTransactions.counter = 0;
+findTransactionById.counter = 0;
+updateTransaction = 0;
+deleteTransaction = 0;
+
 function deleteTransaction(request, response) {
+    deleteTransaction.counter++;
+    console.log(deleteTransaction.counter);
+    var params = {
+        MetricData: [
+          {
+            MetricName: 'api -  /api/transaction/:transactionId"',
+            Dimensions: [
+              {
+                Name: 'api',
+                Value: 'counter'
+              },
+            ],
+            Unit: 'None',
+            Value: deleteTransaction.counter
+          },
+        ],
+        Namespace: 'deleteTransactionByIdApi/traffic'
+      };
+    cw.putMetricData(params, function(err, data) {
+        if (err) {
+          logger.info("Error", err);
+        } else {
+          logger.info("Success", JSON.stringify(data));
+        }
+      });
     var transactionId = request.params.transactionId;
     transactionModel.deleteTransaction(transactionId)
         .then(function (status) {
@@ -18,6 +49,32 @@ function deleteTransaction(request, response) {
 }
 
 function updateTransaction(request, response) {
+
+    updateTransaction.counter++;
+    console.log(updateTransaction.counter);
+    var params = {
+        MetricData: [
+          {
+            MetricName: 'api -  /api/transaction/:transactionId"',
+            Dimensions: [
+              {
+                Name: 'api',
+                Value: 'counter'
+              },
+            ],
+            Unit: 'None',
+            Value: updateTransaction.counter
+          },
+        ],
+        Namespace: 'updateTransactionByIdApi/traffic'
+      };
+    cw.putMetricData(params, function(err, data) {
+        if (err) {
+          logger.info("Error", err);
+        } else {
+          logger.info("Success", JSON.stringify(data));
+        }
+      });
     var transactionId = request.params.transactionId;
     var transaction = request.body;
     transactionModel.updateTransaction(transactionId, transaction)
@@ -29,6 +86,32 @@ function updateTransaction(request, response) {
 }
 
 function findTransactionById(request, response) {
+
+    findTransactionById.counter++;
+    console.log(findTransactionById.counter);
+    var params = {
+        MetricData: [
+          {
+            MetricName: 'api -  /api/transaction/:transactionId"',
+            Dimensions: [
+              {
+                Name: 'api',
+                Value: 'counter'
+              },
+            ],
+            Unit: 'None',
+            Value: findTransactionById.counter
+          },
+        ],
+        Namespace: 'findTransactionByIdApi/traffic'
+      };
+    cw.putMetricData(params, function(err, data) {
+        if (err) {
+          logger.info("Error", err);
+        } else {
+          logger.info("Success", JSON.stringify(data));
+        }
+      });
     var transactionId = request.params.transactionId;
     transactionModel.findTransactionById(transactionId)
         .then(function (transaction) {
@@ -39,6 +122,32 @@ function findTransactionById(request, response) {
 }
 
 function getTransactions(request, response){
+
+    getTransactions.counter++;
+    console.log(getTransactions.counter);
+    var params = {
+        MetricData: [
+          {
+            MetricName: 'api -  /api/user/:userId/transaction"',
+            Dimensions: [
+              {
+                Name: 'api',
+                Value: 'counter'
+              },
+            ],
+            Unit: 'None',
+            Value: getTransactions.counter
+          },
+        ],
+        Namespace: 'getTransactionsApi/traffic'
+      };
+    cw.putMetricData(params, function(err, data) {
+        if (err) {
+          logger.info("Error", err);
+        } else {
+          logger.info("Success", JSON.stringify(data));
+        }
+      });
     var userId = request.params.userId;
     transactionModel.getTransactions(userId)
         .then(function (transactions) {
@@ -49,6 +158,32 @@ function getTransactions(request, response){
 }
 
 function createTransaction(request, response) {
+    createTransaction.counter++;
+    console.log(createTransaction.counter);
+    var params = {
+        MetricData: [
+          {
+            MetricName: 'api -  /api/user/:userId/transaction"',
+            Dimensions: [
+              {
+                Name: 'api',
+                Value: 'counter'
+              },
+            ],
+            Unit: 'None',
+            Value: createTransaction.counter
+          },
+        ],
+        Namespace: 'TransactionApi/traffic'
+      };
+    cw.putMetricData(params, function(err, data) {
+        if (err) {
+          logger.info("Error", err);
+        } else {
+          logger.info("Success", JSON.stringify(data));
+        }
+      });
+    
     var userId = request.params.userId;
     var transaction = request.body;
     transaction.userId = userId;

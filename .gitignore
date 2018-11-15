@@ -10,7 +10,6 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-node_modules/
 downloads/
 eggs/
 .eggs/
@@ -73,7 +72,7 @@ target/
 
 # pyenv
 .python-version
-
+node_modules/
 # celery beat schedule file
 celerybeat-schedule
 
