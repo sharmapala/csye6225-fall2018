@@ -29,15 +29,13 @@ const logger = winston.createLogger({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.set('trust proxy', 1) // trust first proxy
 app.use(session({
-    secret: "Hi",
-    cookie: {
-      "maxAge": 86400000,
-      "secure": true
-  },
-    resave: true,
-    saveUninitialized: true
-}));
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}))
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
