@@ -4,7 +4,7 @@ var db =  require(__dirname+"/server/models/database");
 var express = app.express;
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-var session      = require('express-session');
+var session      = require('cookie-session');
 var passport = require('passport');
 var nodemailer = require('nodemailer');
 var crypto = require('crypto');
@@ -34,11 +34,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({
+    name: 'session',
     secret: "Hi",
-     cookie: {
       "maxAge": 86400000,
-      "secure": true
-  },
+      "secure": true,
     resave: true,
     saveUninitialized: true
 }));
