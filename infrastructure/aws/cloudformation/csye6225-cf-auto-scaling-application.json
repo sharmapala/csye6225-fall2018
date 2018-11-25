@@ -322,6 +322,7 @@
       "Properties" : {
         "HealthCheckIntervalSeconds" : 30,
         "HealthCheckTimeoutSeconds" : 5,
+        "HealthCheckPath" : "/index.html",
         "HealthyThresholdCount" : 3,
         "UnhealthyThresholdCount" : 5,
         "HealthCheckPort" : "5050",
