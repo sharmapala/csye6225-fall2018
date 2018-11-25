@@ -25,8 +25,6 @@ const logger = winston.createLogger({
   });
 
 
-   app.use(function(req, res, next) {
-
   app.use(function(req, res, next) {
 
   res.header("Access-Control-Allow-Origin", "*");
