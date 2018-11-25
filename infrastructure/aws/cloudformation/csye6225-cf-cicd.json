@@ -9,10 +9,12 @@
 
         },
 
+
         "codedeployapplicationname":{
             "Description":"Code deploy application name",
             "Type":"String"
         },
+
 
         "S3bucketname":{
             "Description":"S3 bucket name",
@@ -55,6 +57,19 @@
                         ],
                         "Effect": "Allow",
                         "Resource": "*"
+                    },
+
+                    {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:Create*",
+                          "logs:PutLogEvents",
+                          "s3:GetObject"
+                        ],     
+                        "Resource": [
+                            "arn:aws:logs:*:*:*",
+                            "arn:aws:s3:::*"
+                        ]
                     }
                 ]
             },
@@ -91,6 +106,7 @@
                  "Action": [ "sts:AssumeRole" ]
               } ]
            },
+              "ManagedPolicyArns": ["arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole", "arn:aws:iam::aws:policy/service-role/AmazonSNSRole","arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM", "arn:aws:iam::aws:policy/AmazonSNSFullAccess", "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"],
               "Path": "/",
               "RoleName": "WebServerServiceRole"
             }
@@ -123,6 +139,70 @@
             }
           },
 
+         
+
+          "LambdafunctionexcutionnRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": ["lambda.amazonaws.com"]
+                            },
+                            "Action": ["sts:AssumeRole"]
+                        }
+                    ]
+                },
+                "RoleName": "LambdafunctionexcutionnRole",
+                "ManagedPolicyArns": ["arn:aws:iam::aws:policy/AmazonSESFullAccess","arn:aws:iam::aws:policy/CloudWatchLogsFullAccess","arn:aws:iam::aws:policy/AmazonS3FullAccess", "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"],
+                "Path": "/"
+            }
+        },
+
+        "LambdaRolePolicy": {
+            "DependsOn": [
+                "LambdafunctionexcutionnRole"
+            ],
+            "Type": "AWS::IAM::Policy",
+            "Properties": {
+                "PolicyName": "LambdaRolePolicy",
+                "Roles": [
+                    {"Ref": "LambdafunctionexcutionnRole"}
+                ],
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {  
+                           "Sid": "Stmt1428510662000",
+                          "Effect": "Allow",
+                          "Action": [
+                              "dynamodb:*",
+                              "dynamodb:DescribeStream",
+                              "dynamodb:GetRecords",
+                              "dynamodb:GetShardIterator",
+                              "dynamodb:ListStreams"
+                          ],
+                          "Resource": [
+
+                              {
+                                "Fn::Join": [
+                                    "",
+                                    [
+                                      "arn:aws:dynamodb:us-east-1:", {"Ref": "AWS::AccountId"}, ":table/csye6225"
+                                    ]
+                                ]
+                            }
+                          ]
+                      }
+      
+                    ]
+                }
+            }
+        },
+
           "TravisCodeDeployPolicy":{
             "Type" : "AWS::IAM::Policy",
             "Properties" : { 
@@ -149,6 +229,20 @@
                           
                       ]
                   },
+
+                  {
+                    
+                    "Effect": "Allow",
+                    "Action": "lambda:*",
+                    "Resource": "*"
+                },
+
+                {
+                  "Sid": "AllowCloudFormationAll",
+                  "Effect": "Allow",
+                  "Action": "cloudformation:*",
+                  "Resource": "*"
+              },
 
                   {
                     "Effect": "Allow",
@@ -274,6 +368,7 @@
       
             }
           },
+
 
         "S3Bucketweb":{
             "Type" : "AWS::S3::Bucket",
