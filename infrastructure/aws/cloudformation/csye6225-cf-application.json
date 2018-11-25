@@ -87,7 +87,7 @@
                 "sudo rm -rf config.json\n",
                 "sudo touch config.json\n",
                 "sudo chmod 777 config.json\n",
-                "echo '{\"agent\":{\"metrics_collection_interval\": 10,\"logfile\":\"/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log\"},\"logs\":{\"logs_collected\": {\"files\": {\"collect_list\": [{\"file_path\": \"/home/centos/webapp/combined.log\",\"log_group_name\": \"csye6225_fall2018\"},{\"file_path\": \"/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log\",\"log_group_name\": \"cloudwatchgentlogs\"}]}}},\"metrics\": {\"namespace\":\"Ec2Metrics\",\"metrics_collected\":{\"collectd\":{\"metrics_aggregation_interval\": 10},\"statsd\":{\"metrics_aggregation_interval\": 10,\"metrics_collection_interval\":30,\"service_address\":\":8125\"}}}}' >> config.json",
+                "echo '{\"agent\": {\"metrics_collection_interval\": 10,\"logfile\": \"/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log\"},\"logs\": {\"logs_collected\": {\"files\": {\"collect_list\": [{\"file_path\": \"/home/centos/webapp/combined.log\",\"log_group_name\": \"csye6225_fall2018\",\"log_stream_name\": \"webapp\",\"timestamp_format\": \"%H:%M:%S %y %b %-d\"}]}}},\"metrics\": {\"metrics_collected\": {\"statsd\": {\"service_address\": \":8125\",\"metrics_collection_interval\": 10,\"metrics_aggregation_interval\": 0}}}}' >> config.json \n",
                 "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json -s\n",
                 "sudo systemctl restart amazon-cloudwatch-agent.service\n",
                 "sudo systemctl status  amazon-cloudwatch-agent.service\n",

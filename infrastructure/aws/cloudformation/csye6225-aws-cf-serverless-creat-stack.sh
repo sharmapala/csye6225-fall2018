@@ -99,7 +99,7 @@ exitWithErrorMessage() {
 
 dir_var=$(pwd)
 # echo "Current Directory is '$dir_var'"
-file_dir_var="file://$dir_var/csye6225-cf-application.json"
+file_dir_var="file://$dir_var/csye6225-cf-serverless.json"
 
 
 
