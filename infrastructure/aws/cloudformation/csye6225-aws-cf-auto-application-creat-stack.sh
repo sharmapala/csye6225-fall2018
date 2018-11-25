@@ -55,9 +55,15 @@ echo "**SHOW SUBNETS**"
 aws ec2 describe-subnets
 
 echo "These are the Subnets you have!"
-echo "Which one do you want!"
-read PUBLIC_SUBNET_CHOSEN
-echo "You chose '$PUBLIC_SUBNET_CHOSEN'."
+echo "Enter puublic subnet1"
+read PUBLIC_SUBNET_CHOSEN1
+
+echo "Enter puublic subnet 2"
+read PUBLIC_SUBNET_CHOSEN2
+
+echo "Enter puublic subnet 3"
+read PUBLIC_SUBNET_CHOSEN3
+
 
 # PART 4 - VPC NAME, VPC ID and PUBLIC SUBNET DISPLAY
 echo -e "\n"
@@ -86,6 +92,34 @@ echo -e "\n"
 echo "Please enter websecurity group id."
 read webserver_securitygroup
 
+echo -e "\n"
+echo "Please enter load balncer security group id."
+read loadbalancer_securitygroup
+
+echo -e "\n"
+echo "Please enter Hosted zone ID."
+read Hostzone_ID
+
+echo -e "\n"
+echo "Please enter Domain Name."
+read Domain_name
+
+echo -e "\n"
+echo "Enter code deploy service role"
+read codedeployservice_role
+
+echo -e "\n"
+echo "Please enter deployment Group Name."
+read Deployment_Group
+
+echo -e "\n"
+echo "Please enter code deploy application Name."
+read codedeploy_application
+
+
+echo -e "\n"
+echo "Please enter certificate arn."
+read certificate
 #Functions
 #-------------------------------------------------------------------------------
 # Retrieve the status of a cfn stack
@@ -147,14 +181,14 @@ exitWithErrorMessage() {
 
 dir_var=$(pwd)
 # echo "Current Directory is '$dir_var'"
-file_dir_var="file://$dir_var/csye6225-cf-application.json"
+file_dir_var="file://$dir_var/csye6225-cf-auto-scaling-application.json"
 
 #Create Stack
 
 aws cloudformation create-stack \
 	--stack-name $Stack_Name  \
 	--template-body $file_dir_var \
-		--parameters  ParameterKey="VPC",ParameterValue=$vpc_id ParameterKey="SubnetIdwebserver",ParameterValue=$PUBLIC_SUBNET_CHOSEN ParameterKey="KeyName",ParameterValue=$KEY_CHOSEN ParameterKey="S3bucketname",ParameterValue=$S3_Bucket ParameterKey="DBsubnetgroup",ParameterValue=$DBSubnet_Group ParameterKey="WebserverInstanceProfile",ParameterValue=$webserver_instanceprofile ParameterKey="WebServerSecurityGroup",ParameterValue=$webserver_securitygroup \
+		--parameters  ParameterKey="VPC",ParameterValue=$vpc_id ParameterKey="publicSubnets1",ParameterValue=$PUBLIC_SUBNET_CHOSEN1 ParameterKey="publicSubnets2",ParameterValue=$PUBLIC_SUBNET_CHOSEN2 ParameterKey="publicSubnets3",ParameterValue=$PUBLIC_SUBNET_CHOSEN3 ParameterKey="KeyName",ParameterValue=$KEY_CHOSEN ParameterKey="S3bucketname",ParameterValue=$S3_Bucket ParameterKey="DBsubnetgroup",ParameterValue=$DBSubnet_Group ParameterKey="WebserverInstanceProfile",ParameterValue=$webserver_instanceprofile ParameterKey="WebServerSecurityGroup",ParameterValue=$webserver_securitygroup ParameterKey="Loadbalancersecuritygroup",ParameterValue=$loadbalancer_securitygroup ParameterKey="HostedZId",ParameterValue=$Hostzone_ID ParameterKey="DomainName",ParameterValue=$Domain_name ParameterKey="CodeDeployServiceRole",ParameterValue=$codedeployservice_role ParameterKey="Deploymentgroupname",ParameterValue=$Deployment_Group ParameterKey="codedeployapplicationname",ParameterValue=$codedeploy_application ParameterKey="Certificate1ARN",ParameterValue=$certificate\
 	--disable-rollback
 
 # aws cloudformation create-stack \
