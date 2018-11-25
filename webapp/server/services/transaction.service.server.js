@@ -1,18 +1,30 @@
 var app = require(process.cwd()+"/express");
 var transactionModel =  require(process.cwd()+"/server/models/transaction/transaction.modal.server");
-
+var aws = require('aws-sdk');
 app.post("/api/user/:userId/transaction", createTransaction);
 app.get("/api/user/:userId/transaction", getTransactions);
 app.get("/api/transaction/:transactionId", findTransactionById);
 app.put("/api/transaction/:transactionId", updateTransaction);
 app.delete("/api/transaction/:transactionId", deleteTransaction);
-
+var cw = new aws.CloudWatch({apiVersion: '2010-08-01'});
 createTransaction.counter = 0;
 getTransactions.counter = 0;
 findTransactionById.counter = 0;
 updateTransaction = 0;
 deleteTransaction = 0;
-
+var winston = require('winston');
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  transports: [
+    //
+    // - Write to all logs with level `info` and below to `combined.log` 
+    // - Write all logs error (and below) to `error.log`.
+    //
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'combined.log' })
+  ]
+});
 function deleteTransaction(request, response) {
     deleteTransaction.counter++;
     console.log(deleteTransaction.counter);

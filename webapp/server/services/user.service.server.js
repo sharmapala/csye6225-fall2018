@@ -110,6 +110,7 @@ function localStrategy(username, password, done) {
     userModel.findUserByUserName(username)
         .then(function (user) {
             if(!user) {
+                logger.info("user null");
                 return done(null, false);
             }
 
@@ -120,6 +121,7 @@ function localStrategy(username, password, done) {
             
         }, function (err) {
             if(err) {
+                logger.info("error");
                 return done(err);
             }
         });

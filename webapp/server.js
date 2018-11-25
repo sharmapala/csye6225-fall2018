@@ -4,7 +4,7 @@ var db =  require(__dirname+"/server/models/database");
 var express = app.express;
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-var session      = require('express-session');
+var session      = require('cookie-session');
 var passport = require('passport');
 var nodemailer = require('nodemailer');
 var crypto = require('crypto');
@@ -24,16 +24,25 @@ const logger = winston.createLogger({
     ]
   });
 
-  
+       
+  app.use(function(req, res, next) {
+
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+//app.set('trust proxy', 1) // trust first proxy
 app.use(session({
+    name: 'session',
     secret: "Hi",
     resave: true,
     saveUninitialized: true
 }));
+
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -46,7 +55,7 @@ app.use(express.static(__dirname + '/server'));
 
 require(__dirname +"/server/app");
 
-app.listen(process.env.PORT || 5000, '0.0.0.0');
+app.listen(process.env.PORT || 5050, '0.0.0.0');
 
 // db.users.sync();
 // db.attachments.sync();
