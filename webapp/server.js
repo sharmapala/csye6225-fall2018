@@ -5,6 +5,7 @@ var express = app.express;
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session      = require('cookie-session');
+//var session1 = require('express-session');
 var passport = require('passport');
 var nodemailer = require('nodemailer');
 var crypto = require('crypto');
