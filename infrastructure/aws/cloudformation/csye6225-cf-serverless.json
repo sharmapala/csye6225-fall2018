@@ -18,7 +18,12 @@
             "Type":"String"
             
             
+        },
+        "domainname":{
+          "Description":"domain name",
+          "Type":"String"
         }
+
 
     },
     
@@ -120,7 +125,10 @@
                 "Variables": {
                     "SOURCEADD": {
                         "Ref": "emailaddress"
-                    }
+                    },
+                    "DOMAIN": {
+                      "Ref": "domainname"
+                  }
                 }
             },
               "FunctionName" : "SendEmailfunction",
