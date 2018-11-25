@@ -45,11 +45,6 @@ app.use(session({
     saveUninitialized: true
 }));
 
-  name: 'session',
-    secret: 'Hi',
-  resave: true,
-  saveUninitialized: true,
-}))
 
 app.use(flash());
 app.use(passport.initialize());
