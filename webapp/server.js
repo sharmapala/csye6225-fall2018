@@ -4,7 +4,7 @@ var db =  require(__dirname+"/server/models/database");
 var express = app.express;
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-var session      = require('express-session');
+var session      = require('cookie-session');
 var passport = require('passport');
 var nodemailer = require('nodemailer');
 var crypto = require('crypto');
@@ -33,12 +33,12 @@ const logger = winston.createLogger({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.set('trust proxy', 1) // trust first proxy
+//app.set('trust proxy', 1) // trust first proxy
 app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
+  name: 'session',
+    secret: 'Hi',
+  resave: true,
   saveUninitialized: true,
-  cookie: { secure: true }
 }))
 app.use(flash());
 app.use(passport.initialize());
