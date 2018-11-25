@@ -4,18 +4,29 @@ var multerS3 = require('multer-s3');
 var aws = require('aws-sdk');
 var attachmentModel =  require(process.cwd()+"/server/models/attachment/attachment.model.server");
 var multer = require('multer'); // npm install multer --save
-
+var winston = require('winston');
 // app.post("/api/transaction/:transactionId/attachment", createAttachment);
 app.get("/api/transaction/:transactionId/attachment", getAttachment);
 app.get("/api/attachment/:attachmentId", findAttachmentById);
 // app.put("/api/attachment/:attachmentId", updateAttachment);
-
+var cw = new aws.CloudWatch({apiVersion: '2010-08-01'});
 createAttachment.counter = 0;
 getAttachment.counter = 0;
 findAttachmentById.counter = 0;
 updateAttachment.counter = 0;
 deleteAttachment.counter = 0;
-
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  transports: [
+    //
+    // - Write to all logs with level `info` and below to `combined.log` 
+    // - Write all logs error (and below) to `error.log`.
+    //
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'combined.log' })
+  ]
+});
 
 var bucketname = process.env.BUCKETNAME;
 var upload;
