@@ -1,0 +1,154 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Cloud Formation to build Application stack",
+    "Parameters":{
+
+          "LambdaRole":{
+            "Description":"lambdafunction Role ",
+            "Type":"String"
+          },
+
+          "emailaddress":{
+            "Description":"source address",
+            "Type":"String"
+          },
+
+          "S3bucketname":{
+            "Description":"S3 bucket name",
+            "Type":"String"
+            
+            
+        },
+        "domainname":{
+          "Description":"domain name",
+          "Type":"String"
+        }
+
+
+    },
+    
+    "Resources":{
+
+        "SNSservice":{
+            "Type" : "AWS::SNS::Topic",
+            "Properties" : {
+              "DisplayName" : "Passreset",
+              "Subscription" : [{
+                "Endpoint" :{ "Fn::GetAtt" : [ "Lambdafunction", "Arn" ] } ,
+                "Protocol" : "lambda"}],
+              "TopicName" : "password_reset"
+              
+            }
+          },
+
+          "SNStopicpolicy":{
+            "Type" : "AWS::SNS::TopicPolicy",
+            "Properties" :
+              {
+                "PolicyDocument" : {
+                    "Version": "2008-10-17",
+                    "Id": "__default_policy_ID",
+                    "Statement": [
+                      {
+                        "Sid": "__default_statement_ID",
+                        "Effect": "Allow",
+                        "Principal": {
+                          "AWS": "*"
+                        },
+                        "Action": [
+                          "SNS:Publish",
+                          "SNS:DeleteTopic",
+                          "SNS:ListSubscriptionsByTopic",
+                          "SNS:GetTopicAttributes",
+                          "SNS:Receive",
+                          "SNS:AddPermission",
+                          "SNS:Subscribe"
+                        ],
+                        "Resource": {"Ref": "SNSservice"},
+                        "Condition": {
+                          "StringEquals": {
+                            "AWS:SourceOwner": {
+                                "Ref": "AWS::AccountId"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "Sid": "__console_pub_0",
+                        "Effect": "Allow",
+                        "Principal": {
+                          "AWS": "*"
+                        },
+                        "Action": "SNS:Publish",
+                        "Resource": {"Ref": "SNSservice"}
+                      },
+                      {
+                        "Sid": "__console_sub_0",
+                        "Effect": "Allow",
+                        "Principal": {
+                          "AWS": "*"
+                        },
+                        "Action": [
+                          "SNS:Subscribe",
+                          "SNS:Receive"
+                        ],
+                        "Resource": {"Ref": "SNSservice"}
+                      }
+                    ]
+                  },
+                "Topics" : [ {"Ref": "SNSservice"} ]
+              }
+          },
+
+          "LambdaInvokePermission": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+                "FunctionName": { "Ref":"Lambdafunction"},
+                "Action": "lambda:InvokeFunction",
+                "Principal": "sns.amazonaws.com",
+                "SourceArn": {
+                    "Ref": "SNSservice"
+                    
+                }
+            }
+        },
+
+        "Lambdafunction": {
+            "Type" : "AWS::Lambda::Function",
+            "Properties" : {
+              "Description" : "Lambda function to save token to dynamodb and send email usng SES",
+              "Code": {
+                "S3Bucket": {"Ref": "S3bucketname"},
+                "S3Key": "index.js.zip"
+              },
+              "Environment": {
+                "Variables": {
+                    "SOURCEADD": {
+                        "Ref": "emailaddress"
+                    },
+                    "DOMAIN": {
+                      "Ref": "domainname"
+                  }
+                }
+            },
+              "FunctionName" : "SendEmailfunction",
+              "Handler" : "index.handler",
+              "Role" : {
+                "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:iam::", {"Ref": "AWS::AccountId"}, ":role/",
+                        {"Ref": "LambdaRole"}
+                    ]
+                ]
+            },
+              "Runtime" : "nodejs4.3",
+              "Timeout" : 5
+            }
+          }
+        
+    },
+    
+    "Outputs": {
+    }
+}
