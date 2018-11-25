@@ -24,8 +24,6 @@ const logger = winston.createLogger({
     ]
   });
 
-
-   app.use(function(req, res, next) {
        
   app.use(function(req, res, next) {
 
@@ -45,12 +43,6 @@ app.use(session({
     saveUninitialized: true
 }));
 
-  name: 'session',
-    secret: 'Hi',
-  resave: true,
-  saveUninitialized: true,
-}))
-
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -63,7 +55,7 @@ app.use(express.static(__dirname + '/server'));
 
 require(__dirname +"/server/app");
 
-app.listen(process.env.PORT || 5000, '0.0.0.0');
+app.listen(process.env.PORT || 5050, '0.0.0.0');
 
 // db.users.sync();
 // db.attachments.sync();
