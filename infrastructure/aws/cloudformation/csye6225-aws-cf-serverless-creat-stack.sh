@@ -38,6 +38,10 @@ echo -e "\n"
 echo "Enter the lambda execution role"
 read lambdarole
 
+echo -e "\n"
+echo "Enter the domain name"
+read domainname
+
 #Functions
 #-------------------------------------------------------------------------------
 # Retrieve the status of a cfn stack
@@ -114,7 +118,7 @@ aws s3 cp index.js.zip s3://$S3_Bucket/index.js.zip
 aws cloudformation create-stack \
 	--stack-name $Stack_Name  \
 	--template-body $file_dir_var \
-		--parameters  ParameterKey="LambdaRole",ParameterValue=$lambdarole ParameterKey="emailaddress",ParameterValue=$Source_emailaddr ParameterKey="S3bucketname",ParameterValue=$S3_Bucket \
+		--parameters  ParameterKey="LambdaRole",ParameterValue=$lambdarole ParameterKey="emailaddress",ParameterValue=$Source_emailaddr ParameterKey="S3bucketname",ParameterValue=$S3_Bucket ParameterKey="domainname",ParameterValue=$domainname \
 	--disable-rollback
 
 # aws cloudformation create-stack \

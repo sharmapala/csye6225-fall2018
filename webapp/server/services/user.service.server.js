@@ -54,7 +54,6 @@ function statsd (path) {
 app.get("/api/logout", logoutUser);
 
 app.post("/api/reset", statsd('reset'), resetPassword);
-=======
 app.post("/api/reset", resetPassword);
 
 app.post("/user/register", registerUser);
@@ -84,26 +83,6 @@ function deserializeUser(user, done) {
         );
 }
 
-
-// function basicStrategy(username, password, done) {
-//     console.log(username+"-----------"+password);
-//     userModel.findUserByUserName(username)
-//         .then(function (user) {
-//             if(!user) {
-//                 return done(null, false);
-//             }
-
-//             bcrypt.compare(password, user.password, function(err, res){
-//                 if(res)
-//                     return done(null, user);
-//             });
-            
-//         }, function (err) {
-//             if(err) {
-//                 return done(err);
-//             }
-//         });
-// }
 
 function localStrategy(username, password, done) {
     logger.info(username+"-----------"+password);
