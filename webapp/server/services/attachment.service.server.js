@@ -15,7 +15,6 @@ getAttachment.counter = 0;
 findAttachmentById.counter = 0;
 updateAttachment.counter = 0;
 deleteAttachment.counter = 0;
-
 const logger = winston.createLogger({
   level: 'info',
   format: winston.format.json(),
@@ -240,7 +239,6 @@ function updateAttachment(request, response) {
 
 app.delete("/api/attachment/:attachmentId/:userName",deleteAttachment);
 function deleteAttachment(request, response) {
-
     deleteAttachment.counter++;
     console.log(deleteAttachment.counter);
     var params = {
@@ -266,7 +264,6 @@ function deleteAttachment(request, response) {
           logger.info("Success", JSON.stringify(data));
         }
       });
-
     console.log(request);
     var attachmentId = request.params.attachmentId;
    // var myFile        = request.file;
