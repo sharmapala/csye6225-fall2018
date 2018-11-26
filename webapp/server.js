@@ -5,7 +5,6 @@ var express = app.express;
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session      = require('cookie-session');
-//var session1 = require('express-session');
 var passport = require('passport');
 var nodemailer = require('nodemailer');
 var crypto = require('crypto');
@@ -25,7 +24,7 @@ const logger = winston.createLogger({
     ]
   });
 
-       
+
   app.use(function(req, res, next) {
 
   res.header("Access-Control-Allow-Origin", "*");
@@ -43,6 +42,7 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+
 
 app.use(flash());
 app.use(passport.initialize());
