@@ -516,7 +516,7 @@
               "ServiceName" : { "Fn::Join": [ "", [ "com.amazonaws.", { "Ref": "AWS::Region" }, ".sns" ] ] },
               "PrivateDnsEnabled": "True",
               "VpcEndpointType" : "Interface",
-              "SubnetIds" : [ {"Ref": "PrivateSubnet3"}, {"Ref": "PublicSubnet2"}, {"Ref": "PrivateSubnet1"} ],
+              "SubnetIds" : [ {"Ref": "PublicSubnet1"}, {"Ref": "PublicSubnet2"}, {"Ref": "PublicSubnet3"} ],
               "SecurityGroupIds" : [ {"Ref": "WebServerSecurityGroup"}]
             }
           },
