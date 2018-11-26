@@ -3,13 +3,6 @@
     "Description": "Cloud Formation to build Continuos Integration and deployment stack",
     "Parameters":{
 
-        "Deploymentgroupname":{
-            "Description":"Deployment group name",
-            "Type":"String"
-
-        },
-
-
         "codedeployapplicationname":{
             "Description":"Code deploy application name",
             "Type":"String"
@@ -345,31 +338,6 @@
           },
 
         
-          
-          "DeploymentGroup" : {
-            "Type" : "AWS::CodeDeploy::DeploymentGroup",
-            "DependsOn":"codedeployapplication",
-            "Properties" : {
-              "ApplicationName" : {"Ref" : "codedeployapplication"},
-             
-              "DeploymentGroupName" : {"Ref": "Deploymentgroupname"},
-              "DeploymentStyle": {
-                    "DeploymentOption" : "WITHOUT_TRAFFIC_CONTROL",
-                    "DeploymentType" : "IN_PLACE"
-              },
-
-              "Ec2TagFilters" : [{
-                "Key" : {"Ref": "TagKey"},
-                "Type" : "KEY_AND_VALUE",
-                "Value" : {"Ref":"TagValue"}
-                
-            }],
-              "ServiceRoleArn" : {"Fn::GetAtt" : ["CodeDeployServiceRole", "Arn"] }
-      
-            }
-          },
-
-
         "S3Bucketweb":{
             "Type" : "AWS::S3::Bucket",
             "Properties" : {
@@ -389,11 +357,6 @@
           "MyApplication":{
             "Value":{
               "Ref":"codedeployapplication"
-            }
-          },
-          "MyDeploymentGroup":{
-            "Value":{
-              "Ref":"DeploymentGroup"
             }
           }
         
