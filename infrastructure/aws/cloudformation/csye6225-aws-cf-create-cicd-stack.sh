@@ -45,10 +45,6 @@ read Stack_Name
 # aws ec2 describe-vpcs
 
 echo -e "\n"
-echo "Enter the Deployment group name"
-read Deployment_group
-
-echo -e "\n"
 echo "Enter the Code deploy application name"
 read Codedeploy_appname
 
@@ -149,7 +145,7 @@ aws cloudformation create-stack \
 	--stack-name $Stack_Name  \
 	--template-body $file_dir_var \
 	--capabilities CAPABILITY_NAMED_IAM \
-	--parameters  ParameterKey="Deploymentgroupname",ParameterValue=$Deployment_group ParameterKey="codedeployapplicationname",ParameterValue=$Codedeploy_appname ParameterKey="S3bucketname",ParameterValue=$S3_Bucket ParameterKey="TagKey",ParameterValue=$Tag_key ParameterKey="TagValue",ParameterValue=$Tag_value \
+	--parameters  ParameterKey="codedeployapplicationname",ParameterValue=$Codedeploy_appname ParameterKey="S3bucketname",ParameterValue=$S3_Bucket ParameterKey="TagKey",ParameterValue=$Tag_key ParameterKey="TagValue",ParameterValue=$Tag_value \
 	--disable-rollback
 
 # aws cloudformation create-stack \

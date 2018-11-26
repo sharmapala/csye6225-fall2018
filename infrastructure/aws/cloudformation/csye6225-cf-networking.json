@@ -261,7 +261,7 @@
                         "Fn::Join": [
                             "", [
                             {"Ref": "StackName"},
-                            "-public-az2"
+                            "-public-az1"
                             ]
                         ]
                     }
