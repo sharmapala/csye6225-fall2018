@@ -102,7 +102,7 @@ function basicStrategy(username, password, done) {
 }
 
 function localStrategy(username, password, done) {
-    logger.info(username+"-----------"+password);
+    //logger.info(username+"-----------"+password);
     userModel.findUserByUserName(username)
         .then(function (user) {
             if(!user) {
