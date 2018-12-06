@@ -764,7 +764,7 @@
                         
                         {
                 "Action": {
-                  "Type": "BLOCK"
+                  "Type": "ALLOW"
                 },
                 "Priority": 2,
                 "RuleId": {"Ref":"wafrAuthTokenRule"}
