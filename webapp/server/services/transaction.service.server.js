@@ -199,6 +199,12 @@ function createTransaction(request, response) {
     var userId = request.params.userId;
     var transaction = request.body;
     transaction.userId = userId;
+    var amttype = parseInt(transaction.amount);
+    if (isNaN(amttype)) 
+    {
+      return response.json("Enter correct amount");
+    }
+    console.log(amttype);
     transactionModel
         .createTransaction(transaction)
         .then(function (transaction) {

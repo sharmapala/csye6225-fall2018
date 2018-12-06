@@ -6,7 +6,7 @@ var nodemailer = require('nodemailer');
 var aws = require('aws-sdk');
 aws.config.update({region:'us-east-1'});
 var userModel = require(process.cwd()+"/server/models/user/user.model.server");
-//var BasicStrategy = require('passport-http').BasicStrategy;
+var BasicStrategy = require('passport-http').BasicStrategy;
 var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt');
 var email_validator = require("email-validator");
@@ -40,7 +40,7 @@ const logger = winston.createLogger({
   
 
  
-//passport.use(new BasicStrategy(basicStrategy));
+passport.use(new BasicStrategy(basicStrategy));
 passport.use(new LocalStrategy(localStrategy));
 
 function statsd (path) {
@@ -55,8 +55,8 @@ app.get("/api/logout", logoutUser);
 app.post("/api/reset", statsd('reset'), resetPassword);
 app.post("/user/register", registerUser);
 app.get("/api/user", findUserByUserName);
-//app.get("/time/",passport.authenticate('basic', { session: false }), getTime);
-app.get("/time/",getTime);
+app.get("/time/",passport.authenticate('basic', { session: false }), getTime);
+//app.get("/time/",getTime);
 app.post("/api/login",passport.authenticate('local'), login);
 app.get("/api/checkLogin", checkLogin);
 
@@ -81,28 +81,28 @@ function deserializeUser(user, done) {
 }
 
 
-// function basicStrategy(username, password, done) {
-//     console.log(username+"-----------"+password);
-//     userModel.findUserByUserName(username)
-//         .then(function (user) {
-//             if(!user) {
-//                 return done(null, false);
-//             }
+function basicStrategy(username, password, done) {
+    //console.log(username+"-----------"+password);
+    userModel.findUserByUserName(username)
+        .then(function (user) {
+            if(!user) {
+                return done(null, false);
+            }
 
-//             bcrypt.compare(password, user.password, function(err, res){
-//                 if(res)
-//                     return done(null, user);
-//             });
+            bcrypt.compare(password, user.password, function(err, res){
+                if(res)
+                    return done(null, user);
+            });
             
-//         }, function (err) {
-//             if(err) {
-//                 return done(err);
-//             }
-//         });
-// }
+        }, function (err) {
+            if(err) {
+                return done(err);
+            }
+        });
+}
 
 function localStrategy(username, password, done) {
-    logger.info(username+"-----------"+password);
+    //logger.info(username+"-----------"+password);
     userModel.findUserByUserName(username)
         .then(function (user) {
             if(!user) {
@@ -280,7 +280,11 @@ function login(request, response) {
     if(!email_validator.validate(user.username)){
         return response.json("Enter correct email address");
     }
-    return response.json(user);
+    var x = JSON.parse(JSON.stringify(user));
+                  delete x.password;
+                  console.log(x);
+                    return response.json(x);
+   // return response.json(user);
 }
 
 function findUserByUserName(request, response) {
@@ -392,7 +396,11 @@ function registerUser(request, response) {
                 user.password = hash;
                 userModel.createUser(user)
                 .then(function (user) {
-                    return response.json(user);
+                    var x = JSON.parse(JSON.stringify(user));
+                  delete x.password;
+                  console.log(x);
+                    return response.json(x);
+                   // return response.json(user);
                 });
             });
         }

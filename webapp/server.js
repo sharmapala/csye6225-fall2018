@@ -35,7 +35,7 @@ const logger = winston.createLogger({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-//app.set('trust proxy', 1) // trust first proxy
+app.set('trust proxy', 1) // trust first proxy
 app.use(session({
     name: 'session',
     secret: "Hi",
