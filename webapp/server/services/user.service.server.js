@@ -82,7 +82,7 @@ function deserializeUser(user, done) {
 
 
 function basicStrategy(username, password, done) {
-    console.log(username+"-----------"+password);
+    //console.log(username+"-----------"+password);
     userModel.findUserByUserName(username)
         .then(function (user) {
             if(!user) {
