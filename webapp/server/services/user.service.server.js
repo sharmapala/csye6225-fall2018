@@ -280,7 +280,11 @@ function login(request, response) {
     if(!email_validator.validate(user.username)){
         return response.json("Enter correct email address");
     }
-    return response.json(user);
+    var x = JSON.parse(JSON.stringify(user));
+                  delete x.password;
+                  console.log(x);
+                    return response.json(x);
+   // return response.json(user);
 }
 
 function findUserByUserName(request, response) {
@@ -392,7 +396,11 @@ function registerUser(request, response) {
                 user.password = hash;
                 userModel.createUser(user)
                 .then(function (user) {
-                    return response.json(user);
+                    var x = JSON.parse(JSON.stringify(user));
+                  delete x.password;
+                  console.log(x);
+                    return response.json(x);
+                   // return response.json(user);
                 });
             });
         }
